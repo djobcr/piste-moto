@@ -5,129 +5,271 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Piste Moto · Alès — {{ count_active }} sorties à venir</title>
 
-<!-- DaisyUI = composants pré-faits sur Tailwind. Tailwind Play CDN = JIT runtime. -->
 <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.23/dist/full.min.css" rel="stylesheet" type="text/css" />
 <script src="https://cdn.tailwindcss.com"></script>
-<script>
-    // Configuration Tailwind : on garde la palette DaisyUI, on ajoute juste
-    // une couleur d'accent moto pour les détails (jauge places, hover bouton).
-    tailwind.config = {
-        theme: {
-            extend: {
-                fontFamily: {
-                    sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'sans-serif'],
-                },
-            },
-        },
-    };
-</script>
 <link rel="preconnect" href="https://rsms.me/">
 <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
 
 <style>
-    /* Tweaks visuels minimalistes (le reste vient de DaisyUI) */
-    html { scroll-behavior: smooth; }
-    .event[data-hidden="1"] { display: none; }
-    .event[data-out="1"] .event-action-btn { pointer-events: none; opacity: 0.4; }
-    /* Date kbd-like à gauche de chaque card */
-    .date-block {
-        min-width: 56px;
-        text-align: center;
-    }
-    .date-day {
-        font-size: 1.5rem;
-        font-weight: 800;
-        line-height: 1;
-        font-variant-numeric: tabular-nums;
-    }
-    /* Couleur accent week-end */
-    .event[data-weekend="1"] .date-weekday {
-        color: hsl(var(--er));
-    }
-    /* Chip toggle — états visuels explicites (override DaisyUI btn-outline)
-       - Normal : bord léger, texte mute
-       - Hover : bord plus marqué, fond léger
-       - Focus clavier : ring primary visible
-       - Active (sélectionné) : fond primary plein
-       - Active + hover : primary légèrement assombri
-       - Active + focus : ring primary */
-    .chip-toggle {
-        transition: background-color .15s ease, border-color .15s ease, color .15s ease, box-shadow .15s ease;
-    }
-    .chip-toggle:hover {
-        background-color: hsl(var(--bc) / 0.08) !important;
-        border-color: hsl(var(--bc) / 0.45) !important;
-        color: hsl(var(--bc)) !important;
-    }
-    .chip-toggle:focus-visible {
-        outline: none;
-        box-shadow: 0 0 0 2px hsl(var(--b1)), 0 0 0 4px hsl(var(--p));
-    }
-    .chip-toggle.active {
-        background-color: hsl(var(--p)) !important;
-        color: hsl(var(--pc)) !important;
-        border-color: hsl(var(--p)) !important;
-        font-weight: 600;
-    }
-    .chip-toggle.active:hover {
-        background-color: hsl(var(--p) / 0.88) !important;
-        border-color: hsl(var(--p) / 0.88) !important;
-        color: hsl(var(--pc)) !important;
-    }
-    .chip-toggle.active:focus-visible {
-        box-shadow: 0 0 0 2px hsl(var(--b1)), 0 0 0 4px hsl(var(--p));
-    }
-    /* Petit check visible quand sélectionné — repère sans changer la largeur */
-    .chip-toggle.active::before {
-        content: "✓";
-        margin-right: 0.25rem;
-        font-weight: 700;
-        opacity: 0.9;
-    }
+html { scroll-behavior: smooth; }
+.event[data-hidden="1"] { display: none; }
+.event[data-out="1"] .event-action-btn { pointer-events: none; opacity: 0.4; }
 
-    /* Badges (tags) plus compacts que le défaut DaisyUI :
-       - padding horizontal réduit (0.5 → 0.4rem)
-       - height légèrement plus serrée
-       - gap interne réduit (texte + nombre) */
-    .badge.badge-sm {
-        padding-left: 0.4rem;
-        padding-right: 0.4rem;
-        height: 1.1rem;
-        font-size: 0.7rem;
-        gap: 0.2rem;
-    }
-    .badge.badge-sm .tabular-nums {
-        margin-left: -0.05rem;
-    }
+/* ─────── HERO ─────── */
+.hero-banner {
+    position: relative;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 20% 0%, rgba(239, 68, 68, 0.18) 0%, transparent 50%),
+        radial-gradient(circle at 80% 100%, rgba(168, 85, 247, 0.18) 0%, transparent 50%),
+        linear-gradient(135deg, #0f0f10 0%, #1a1a1f 100%);
+}
+/* Grille subtle en pattern */
+.hero-banner::before {
+    content: "";
+    position: absolute; inset: 0;
+    background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 32px 32px;
+    pointer-events: none;
+}
+.hero-title {
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    line-height: 0.95;
+    background: linear-gradient(180deg, #fff 0%, #a1a1aa 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.hero-circuit {
+    font-weight: 900;
+    font-style: italic;
+    background: linear-gradient(135deg, #ef4444 0%, #ec4899 50%, #a855f7 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
 
-    /* Chips filtres (btn-xs) plus compacts */
-    .chip-toggle.btn-xs {
-        padding-left: 0.55rem;
-        padding-right: 0.55rem;
-        height: 1.5rem;
-        min-height: 1.5rem;
-        font-size: 0.72rem;
-    }
+/* ─────── MOIS TITLE typo poster ─────── */
+.month-title {
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+.month-title em {
+    font-style: italic;
+    font-weight: 700;
+    opacity: 0.6;
+}
+
+/* ─────── CHIPS FILTRES ─────── */
+.chip-toggle {
+    transition: background-color .15s ease, border-color .15s ease, color .15s ease, box-shadow .15s ease;
+}
+.chip-toggle:hover {
+    background-color: hsl(var(--bc) / 0.08) !important;
+    border-color: hsl(var(--bc) / 0.45) !important;
+    color: hsl(var(--bc)) !important;
+}
+.chip-toggle:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px hsl(var(--b1)), 0 0 0 4px hsl(var(--p));
+}
+.chip-toggle.active {
+    background-color: hsl(var(--p)) !important;
+    color: hsl(var(--pc)) !important;
+    border-color: hsl(var(--p)) !important;
+    font-weight: 600;
+}
+.chip-toggle.active:hover {
+    background-color: hsl(var(--p) / 0.88) !important;
+    border-color: hsl(var(--p) / 0.88) !important;
+    color: hsl(var(--pc)) !important;
+}
+.chip-toggle.active::before {
+    content: "✓";
+    margin-right: 0.25rem;
+    font-weight: 700;
+    opacity: 0.9;
+}
+
+/* ─────── BADGES ─────── */
+.badge.badge-sm {
+    padding-left: 0.4rem; padding-right: 0.4rem;
+    height: 1.1rem; font-size: 0.7rem; gap: 0.2rem;
+}
+.badge.badge-sm .tabular-nums { margin-left: -0.05rem; }
+
+/* ─────── EVENT CARDS (Lot A) ─────── */
+.event-card {
+    background: linear-gradient(180deg, hsl(var(--b2)) 0%, hsl(var(--b2) / 0.5) 100%);
+    border: 1px solid hsl(var(--b3));
+    border-radius: 1rem;
+    overflow: hidden;
+    transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+    display: flex;
+    flex-direction: column;
+}
+.event-card:hover {
+    transform: translateY(-2px);
+    border-color: hsl(var(--p) / 0.4);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+}
+
+/* Logo orga (top) */
+.event-logo {
+    width: 2.25rem; height: 2.25rem; border-radius: 0.5rem;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 0.75rem; flex-shrink: 0;
+    background: linear-gradient(135deg,
+        hsl(var(--orga-hue, 200deg) 60% 55%) 0%,
+        hsl(var(--orga-hue, 200deg) 60% 35%) 100%);
+    color: white;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    overflow: hidden;
+}
+.event-logo img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Bandeau date avec gradient signature */
+.event-banner {
+    background: linear-gradient(90deg, #a855f7 0%, #ec4899 50%, #ef4444 100%);
+    padding: 0.5rem 0.875rem;
+    color: white;
+    font-weight: 700;
+    display: flex; align-items: baseline; gap: 0.4rem;
+    line-height: 1.05;
+}
+.event-banner .weekday {
+    font-size: 0.75rem; opacity: 0.85; text-transform: capitalize;
+}
+.event-banner .day-month {
+    font-size: 1.05rem; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.01em;
+}
+.event-banner .year {
+    font-size: 0.7rem; opacity: 0.7; margin-left: auto;
+}
+.event[data-weekend="1"] .event-banner {
+    background: linear-gradient(90deg, #ef4444 0%, #f97316 100%);
+}
+
+/* Bandeau urgence (rouge) si peu de places */
+.event-urgence {
+    background: hsl(var(--er));
+    color: hsl(var(--erc));
+    padding: 0.25rem 0.875rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* ─────── VIEW SWITCHER ─────── */
+.view-switcher .btn { font-weight: 600; }
+.view-switcher .btn.active {
+    background-color: hsl(var(--p));
+    color: hsl(var(--pc));
+    border-color: hsl(var(--p));
+}
+
+/* ─────── CALENDAR (Lot C) ─────── */
+.cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+}
+.cal-head {
+    text-align: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    opacity: 0.6;
+    padding: 0.5rem 0;
+}
+.cal-cell {
+    aspect-ratio: 1;
+    border-radius: 0.5rem;
+    padding: 0.4rem 0.3rem;
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+    font-variant-numeric: tabular-nums;
+    background: transparent;
+    color: hsl(var(--bc) / 0.4);
+    font-size: 0.85rem;
+    transition: background-color .15s ease;
+}
+.cal-cell.has-event {
+    background: linear-gradient(180deg, hsl(var(--b2)) 0%, hsl(var(--b3)) 100%);
+    color: hsl(var(--bc));
+    cursor: pointer;
+    border: 1px solid hsl(var(--b3));
+}
+.cal-cell.has-event:hover {
+    border-color: hsl(var(--p));
+    transform: translateY(-1px);
+}
+.cal-cell.today {
+    outline: 2px solid hsl(var(--p));
+    outline-offset: -2px;
+}
+.cal-cell .cal-day-num {
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1;
+}
+.cal-cell .cal-event-count {
+    margin-top: auto;
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: hsl(var(--p));
+    background: hsl(var(--p) / 0.15);
+    padding: 1px 6px;
+    border-radius: 999px;
+}
+.cal-month-section { display: none; }
+.cal-month-section.active { display: block; }
+.cal-nav .month-label {
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+.cal-nav .month-label em {
+    font-style: italic;
+    font-weight: 700;
+    opacity: 0.6;
+    margin-left: 0.4rem;
+}
+@media (max-width: 540px) {
+    .cal-cell { aspect-ratio: 1; padding: 0.3rem 0.1rem; font-size: 0.75rem; }
+    .cal-cell .cal-day-num { font-size: 0.85rem; }
+    .cal-cell .cal-event-count { font-size: 0.6rem; padding: 1px 4px; }
+}
 </style>
 </head>
 
 <body class="min-h-screen bg-base-100">
 
-<!-- ─────────── NAVBAR ─────────── -->
-<header class="navbar bg-base-200 border-b border-base-300 sticky top-0 z-30 backdrop-blur bg-opacity-90">
-    <div class="container mx-auto max-w-5xl px-2">
-        <div class="flex-1">
-            <a class="text-xl font-bold tracking-tight">
-                <span class="text-error">●</span> Piste Moto · Alès
-            </a>
+<!-- ═══════════════ HERO ═══════════════ -->
+<section class="hero-banner py-10 px-4 border-b border-base-300">
+    <div class="container mx-auto max-w-5xl relative z-10">
+        <div class="flex items-center gap-2 text-xs uppercase tracking-widest opacity-60 mb-2">
+            <span class="text-error">●</span> Piste Moto
         </div>
-        <div class="flex-none text-xs text-base-content/60">
-            crawl {{ generated_at }}
+        <h1 class="hero-circuit text-6xl sm:text-8xl">ALÈS</h1>
+        <h2 class="hero-title text-2xl sm:text-3xl mt-1">Pôle Mécanique Cévennes</h2>
+        <div class="flex flex-wrap gap-x-4 gap-y-1 mt-3 text-sm opacity-70">
+            <span>FR // 2.5 km</span>
+            <span>·</span>
+            <span><strong class="text-base-content">{{ count_active }}</strong> sorties à venir</span>
+            <span>·</span>
+            <span>{{ count_organizers }} organisateurs</span>
+            <span>·</span>
+            <span class="opacity-60">crawl {{ generated_at }}</span>
         </div>
     </div>
-</header>
+</section>
 
-<!-- ─────────── STATS ─────────── -->
+<!-- ═══════════════ STATS ═══════════════ -->
 <section class="container mx-auto max-w-5xl px-3 pt-4">
     <div class="stats stats-horizontal shadow w-full bg-base-200 text-base-content">
         <div class="stat py-3 px-4">
@@ -146,18 +288,12 @@
     </div>
 </section>
 
-<!-- ─────────── FILTRES ─────────── -->
+<!-- ═══════════════ FILTRES ═══════════════ -->
 <section class="container mx-auto max-w-5xl px-3 pt-4">
     <div class="card bg-base-200 shadow">
         <div class="card-body p-4 gap-3">
-
-            <input
-                type="search"
-                id="search"
-                placeholder="Rechercher (organisateur, mois, mot-clé…)"
-                class="input input-bordered w-full"
-                autocomplete="off"
-            >
+            <input type="search" id="search" placeholder="Rechercher (organisateur, mois, mot-clé…)"
+                   class="input input-bordered w-full" autocomplete="off">
 
             <div class="flex flex-wrap gap-3 items-end">
                 <div class="form-control">
@@ -213,24 +349,40 @@
                     {% endfor %}
                 </div>
             </div>
-
         </div>
     </div>
 </section>
 
-<!-- ─────────── ÉVÉNEMENTS ─────────── -->
-<main class="container mx-auto max-w-5xl px-3 py-4" id="events-main">
+<!-- ═══════════════ VIEW SWITCHER ═══════════════ -->
+<section class="container mx-auto max-w-5xl px-3 pt-4">
+    <div class="join view-switcher" role="tablist">
+        <button class="btn btn-sm join-item active" data-view="list" type="button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+            Liste
+        </button>
+        <button class="btn btn-sm join-item" data-view="calendar" type="button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Calendrier
+        </button>
+    </div>
+</section>
+
+<!-- ═══════════════ VIEW LIST ═══════════════ -->
+<main id="view-list" class="container mx-auto max-w-5xl px-3 py-4">
 {% if not events %}
     <div class="alert alert-warning shadow my-6">
         <strong>Aucune sortie à venir.</strong> Le crawl n'a pas trouvé d'événement actif.
     </div>
 {% endif %}
 {% for month_label, group in events_by_month %}
+    {% set month_parts = month_label.rsplit(' ', 1) %}
     <section class="month-section mb-6" data-month="{{ month_label }}">
-        <h2 class="text-xs uppercase tracking-widest opacity-60 mb-2 px-1 font-semibold">{{ month_label }}</h2>
-        <div class="space-y-2">
+        <h2 class="month-title text-2xl sm:text-3xl mb-3 px-1">
+            {{ month_parts[0] }} <em>{{ month_parts[1] }}</em>
+        </h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {% for ev in group %}
-            <article class="event card bg-base-200 shadow-sm hover:shadow-md transition-shadow"
+            <article class="event event-card"
                      data-org="{{ ev.organizer }}"
                      data-available="{{ '1' if ev.available else '0' }}"
                      data-out="{{ '0' if ev.available else '1' }}"
@@ -242,68 +394,81 @@
                      data-seats="{{ ev.seats_num }}"
                      data-levels="{{ ev.canonical_levels_csv }}"
                      data-levels-bookable="{{ ev.bookable_levels_csv }}"
-                     data-text="{{ ev.search_blob | e }}">
-                <div class="card-body p-3 sm:p-4 flex-row gap-3 sm:gap-4 items-center">
-
-                    <div class="date-block bg-base-300 rounded-lg py-2 px-2 shrink-0">
-                        <div class="date-day">{{ ev.day_num }}</div>
-                        <div class="text-[10px] uppercase tracking-wider opacity-70 mt-0.5">{{ ev.month_short }}</div>
-                        <div class="date-weekday text-[10px] uppercase opacity-70">{{ ev.weekday_short }}</div>
-                    </div>
-
-                    <div class="flex-1 min-w-0">
-                        <div class="text-[11px] uppercase tracking-wider font-semibold opacity-70 mb-0.5">{{ ev.organizer }}</div>
-                        <div class="font-medium leading-snug truncate" title="{{ ev.title }}">{{ ev.title }}</div>
-
-                        <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1.5 text-sm">
-                            {% if ev.price_display %}
-                                <span class="font-semibold">{{ ev.price_display }}</span>
-                            {% endif %}
-                            {% if ev.seats_label %}
-                                <span class="badge badge-sm
-                                    {% if ev.seats_class == 'low' %}badge-warning
-                                    {% elif ev.seats_class == 'out' %}badge-ghost line-through opacity-60
-                                    {% else %}badge-success badge-outline
-                                    {% endif %}">{{ ev.seats_label }}</span>
-                            {% endif %}
-                        </div>
-
-                        {% if ev.levels %}
-                        <div class="flex flex-wrap gap-1 mt-1.5">
-                            {% for lv in ev.levels %}
-                                {% if lv.remaining is defined %}
-                                    {# RideApp : nombre exact de places #}
-                                    {% if lv.remaining == 0 %}
-                                        <span class="badge badge-sm badge-ghost line-through opacity-50" title="{{ lv.raw }} : complet">{{ lv.raw }}</span>
-                                    {% elif lv.remaining < 5 %}
-                                        <span class="badge badge-sm badge-warning" title="{{ lv.raw }} : {{ lv.remaining }}/{{ lv.max }}">{{ lv.raw }} <span class="font-bold tabular-nums">{{ lv.remaining }}</span></span>
-                                    {% else %}
-                                        <span class="badge badge-sm badge-success badge-outline" title="{{ lv.raw }} : {{ lv.remaining }}/{{ lv.max }}">{{ lv.raw }} <span class="font-bold tabular-nums">{{ lv.remaining }}</span></span>
-                                    {% endif %}
-                                {% elif lv.is_in_stock is defined %}
-                                    {# PMMC, Spoon Racing : binaire dispo/complet #}
-                                    {% if lv.is_in_stock %}
-                                        <span class="badge badge-sm badge-success badge-outline" title="{{ lv.raw }} : dispo">{{ lv.raw }}</span>
-                                    {% else %}
-                                        <span class="badge badge-sm badge-ghost line-through opacity-50" title="{{ lv.raw }} : complet">{{ lv.raw }}</span>
-                                    {% endif %}
-                                {% else %}
-                                    {# SuperLaps : niveau exposé sans info de stock #}
-                                    <span class="badge badge-sm badge-outline" title="{{ lv.raw }}">{{ lv.raw }}</span>
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-                        {% endif %}
-                    </div>
-
-                    <div class="shrink-0">
-                        {% if ev.booking_url and ev.available %}
-                            <a class="event-action-btn btn btn-sm sm:btn-md btn-primary" href="{{ ev.booking_url }}" target="_blank" rel="noopener">Réserver</a>
+                     data-text="{{ ev.search_blob | e }}"
+                     style="--orga-hue: {{ ev.organizer_color }}">
+                <!-- Top : logo + nom orga -->
+                <div class="flex items-center gap-2 px-3 pt-3 pb-2">
+                    <div class="event-logo">
+                        {% if ev.organizer_logo_url %}
+                            <img src="{{ ev.organizer_logo_url }}" alt="{{ ev.organizer }}" loading="lazy">
                         {% else %}
-                            <span class="event-action-btn btn btn-sm sm:btn-md btn-disabled">Complet</span>
+                            {{ ev.organizer_initials }}
+                        {% endif %}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="text-xs uppercase tracking-wider font-semibold opacity-70 truncate">{{ ev.organizer }}</div>
+                    </div>
+                </div>
+                <!-- Bandeau gradient avec date -->
+                <div class="event-banner">
+                    <span class="weekday">{{ ev.weekday_long }}</span>
+                    <span class="day-month">{{ ev.day_num }} {{ ev.month_short }}</span>
+                </div>
+                <!-- Urgence ? -->
+                {% if ev.seats_class == 'low' and ev.seats_label %}
+                <div class="event-urgence">⚠ {{ ev.seats_label }}</div>
+                {% endif %}
+                <!-- Body -->
+                <div class="px-3 py-3 flex-1 flex flex-col gap-2">
+                    <div class="flex items-center justify-between gap-2 flex-wrap">
+                        {% if ev.price_display %}
+                            <span class="text-xl font-extrabold tracking-tight">{{ ev.price_display }}</span>
+                        {% else %}
+                            <span class="text-xs opacity-50 italic">tarif non communiqué</span>
+                        {% endif %}
+                        {% if ev.seats_label and ev.seats_class != 'low' %}
+                            <span class="badge badge-sm
+                                {% if ev.seats_class == 'out' %}badge-ghost line-through opacity-60
+                                {% else %}badge-success badge-outline
+                                {% endif %}">{{ ev.seats_label }}</span>
                         {% endif %}
                     </div>
 
+                    {% if ev.title %}
+                    <p class="text-xs opacity-60 truncate" title="{{ ev.title }}">{{ ev.title }}</p>
+                    {% endif %}
+
+                    {% if ev.levels %}
+                    <div class="flex flex-wrap gap-1">
+                        {% for lv in ev.levels %}
+                            {% if lv.remaining is defined %}
+                                {% if lv.remaining == 0 %}
+                                    <span class="badge badge-sm badge-ghost line-through opacity-50" title="{{ lv.raw }} : complet">{{ lv.raw }}</span>
+                                {% elif lv.remaining < 5 %}
+                                    <span class="badge badge-sm badge-warning" title="{{ lv.raw }} : {{ lv.remaining }}/{{ lv.max }}">{{ lv.raw }} <span class="font-bold tabular-nums">{{ lv.remaining }}</span></span>
+                                {% else %}
+                                    <span class="badge badge-sm badge-success badge-outline" title="{{ lv.raw }} : {{ lv.remaining }}/{{ lv.max }}">{{ lv.raw }} <span class="font-bold tabular-nums">{{ lv.remaining }}</span></span>
+                                {% endif %}
+                            {% elif lv.is_in_stock is defined %}
+                                {% if lv.is_in_stock %}
+                                    <span class="badge badge-sm badge-success badge-outline" title="{{ lv.raw }} : dispo">{{ lv.raw }}</span>
+                                {% else %}
+                                    <span class="badge badge-sm badge-ghost line-through opacity-50" title="{{ lv.raw }} : complet">{{ lv.raw }}</span>
+                                {% endif %}
+                            {% else %}
+                                <span class="badge badge-sm badge-outline" title="{{ lv.raw }}">{{ lv.raw }}</span>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <div class="mt-auto pt-1">
+                        {% if ev.booking_url and ev.available %}
+                            <a class="event-action-btn btn btn-sm btn-primary w-full" href="{{ ev.booking_url }}" target="_blank" rel="noopener">Réserver</a>
+                        {% else %}
+                            <span class="event-action-btn btn btn-sm btn-disabled w-full">Complet</span>
+                        {% endif %}
+                    </div>
                 </div>
             </article>
             {% endfor %}
@@ -312,11 +477,38 @@
 {% endfor %}
 </main>
 
+<!-- ═══════════════ VIEW CALENDAR (Lot C) ═══════════════ -->
+<main id="view-calendar" class="container mx-auto max-w-5xl px-3 py-4 hidden">
+    {% for month_label, group in events_by_month %}
+        {% set m_parts = month_label.rsplit(' ', 1) %}
+        {% set m_name_lower = m_parts[0]|lower %}
+        {% set m_year = m_parts[1] %}
+        {% set m_first_iso = group[0].date_iso %}
+        <section class="cal-month-section mb-8 {% if loop.first %}active{% endif %}"
+                 data-cal-month-key="{{ m_first_iso[:7] }}"
+                 data-month-name="{{ m_parts[0] }}"
+                 data-month-year="{{ m_year }}">
+            <div class="cal-nav flex items-center justify-between mb-3 px-1">
+                <button class="btn btn-ghost btn-sm" data-cal-prev="1" type="button" aria-label="Mois précédent">←</button>
+                <span class="month-label text-2xl sm:text-3xl">{{ m_parts[0] }} <em>{{ m_year }}</em></span>
+                <button class="btn btn-ghost btn-sm" data-cal-next="1" type="button" aria-label="Mois suivant">→</button>
+            </div>
+            <div class="cal-grid">
+                <div class="cal-head">L</div><div class="cal-head">M</div><div class="cal-head">M</div><div class="cal-head">J</div><div class="cal-head">V</div><div class="cal-head">S</div><div class="cal-head">D</div>
+            </div>
+            <div class="cal-grid mt-1" data-cal-cells>
+                <!-- Cells injectées en JS au load (calcul jours du mois + events) -->
+            </div>
+            <p class="text-xs opacity-50 mt-3 px-1">Les jours surlignés ont au moins une sortie ; cliquez pour voir les cards correspondantes.</p>
+        </section>
+    {% endfor %}
+</main>
+
 <footer class="text-center text-xs opacity-60 py-8 border-t border-base-300">
     {{ count_total }} events en base · {{ count_active }} actifs · scrape les organisateurs publics, "Réserver" redirige chez eux.
 </footer>
 
-<!-- ─────────── JS FILTRES ─────────── -->
+<!-- ═══════════════ JS FILTRES + TRI + STATS + CALENDRIER ═══════════════ -->
 <script>
 (function() {
     const search = document.getElementById('search');
@@ -327,18 +519,20 @@
     const orgsToggleAll = document.getElementById('orgs-toggle-all');
     const priceChips = document.getElementById('price-chips');
     const levelChips = document.getElementById('level-chips');
-    const main = document.getElementById('events-main');
+    const main = document.getElementById('view-list');
+    const viewList = document.getElementById('view-list');
+    const viewCalendar = document.getElementById('view-calendar');
+    const viewSwitcher = document.querySelector('.view-switcher');
 
     const events = Array.from(document.querySelectorAll('article.event'));
     const sections = Array.from(document.querySelectorAll('.month-section'));
 
     const activeOrgs = new Set();
     orgChips.querySelectorAll('.chip-toggle').forEach(c => activeOrgs.add(c.dataset.org));
-
     const activePriceBuckets = new Set();
     const activeLevels = new Set();
 
-    // --- Filtres ---
+    /* ─────── FILTRES ─────── */
     function priceMatchesAnyBucket(priceCents, hasPrice, currency) {
         if (activePriceBuckets.size === 0) return true;
         if (!hasPrice || currency !== 'EUR') return false;
@@ -348,58 +542,42 @@
         if (activePriceBuckets.has('gt150') && eur > 150) return true;
         return false;
     }
-
     function levelMatchesAnyChip(bookableCsv) {
         if (activeLevels.size === 0) return true;
         const bookable = (bookableCsv || '').split(',').filter(Boolean);
-        for (const l of bookable) {
-            if (activeLevels.has(l)) return true;
-        }
+        for (const l of bookable) if (activeLevels.has(l)) return true;
         return bookable.includes('open');
     }
-
     function applyFilters() {
         const q = search.value.trim().toLowerCase();
         const availOnly = onlyAvailable.checked;
         const weekendOnly = onlyWeekend.checked;
-
         events.forEach(ev => {
             const text = ev.dataset.text || '';
-            const org = ev.dataset.org;
-            const available = ev.dataset.available === '1';
-            const weekend = ev.dataset.weekend === '1';
-            const priceCents = parseInt(ev.dataset.priceCents, 10) || 0;
-            const hasPrice = ev.dataset.hasPrice === '1';
-            const currency = ev.dataset.currency || 'EUR';
-            const bookableCsv = ev.dataset.levelsBookable || '';
-
             let hide = false;
             if (q && !text.includes(q)) hide = true;
-            if (availOnly && !available) hide = true;
-            if (weekendOnly && !weekend) hide = true;
-            if (!activeOrgs.has(org)) hide = true;
-            if (!priceMatchesAnyBucket(priceCents, hasPrice, currency)) hide = true;
-            if (!levelMatchesAnyChip(bookableCsv)) hide = true;
+            if (availOnly && ev.dataset.available !== '1') hide = true;
+            if (weekendOnly && ev.dataset.weekend !== '1') hide = true;
+            if (!activeOrgs.has(ev.dataset.org)) hide = true;
+            if (!priceMatchesAnyBucket(parseInt(ev.dataset.priceCents,10)||0, ev.dataset.hasPrice==='1', ev.dataset.currency||'EUR')) hide = true;
+            if (!levelMatchesAnyChip(ev.dataset.levelsBookable || '')) hide = true;
             ev.dataset.hidden = hide ? '1' : '0';
         });
-
         sections.forEach(s => {
             const visible = s.querySelectorAll('article.event:not([data-hidden="1"])').length;
             s.style.display = visible === 0 ? 'none' : '';
         });
-
         applySort();
         updateStats();
+        rebuildCalendar();
     }
 
-    // --- Tri ---
+    /* ─────── TRI ─────── */
     events.forEach(ev => { ev._originSection = ev.closest('.month-section'); });
-
     function restoreMonthLayout() {
         events.forEach(ev => {
-            if (ev._originSection && ev.parentNode !== ev._originSection.querySelector('.space-y-2')) {
-                ev._originSection.querySelector('.space-y-2').appendChild(ev);
-            }
+            const grid = ev._originSection.querySelector('.grid');
+            if (grid && ev.parentNode !== grid) grid.appendChild(ev);
         });
         sections.forEach(s => {
             const visible = s.querySelectorAll('article.event:not([data-hidden="1"])').length;
@@ -408,86 +586,167 @@
         const virtual = main.querySelector('section[data-virtual-results]');
         if (virtual) virtual.style.display = 'none';
     }
-
     function comparator(mode) {
         switch (mode) {
-            case 'date-desc':
-                return (a, b) => b.dataset.dateIso.localeCompare(a.dataset.dateIso);
-            case 'price-asc':
-                return (a, b) => priceKey(a) - priceKey(b);
-            case 'price-desc':
-                return (a, b) => priceKey(b) - priceKey(a);
-            case 'seats-desc':
-                return (a, b) => parseInt(b.dataset.seats, 10) - parseInt(a.dataset.seats, 10);
-            default:
-                return (a, b) => a.dataset.dateIso.localeCompare(b.dataset.dateIso);
+            case 'date-desc': return (a,b) => b.dataset.dateIso.localeCompare(a.dataset.dateIso);
+            case 'price-asc': return (a,b) => priceKey(a) - priceKey(b);
+            case 'price-desc': return (a,b) => priceKey(b) - priceKey(a);
+            case 'seats-desc': return (a,b) => parseInt(b.dataset.seats,10) - parseInt(a.dataset.seats,10);
+            default: return (a,b) => a.dataset.dateIso.localeCompare(b.dataset.dateIso);
         }
     }
-
     function priceKey(ev) {
         if (ev.dataset.hasPrice !== '1') return Number.MAX_SAFE_INTEGER;
         return parseInt(ev.dataset.priceCents, 10);
     }
-
     function applySort() {
         const mode = sortSelect.value;
-        if (mode === 'date-asc') {
-            restoreMonthLayout();
-            return;
-        }
+        if (mode === 'date-asc') { restoreMonthLayout(); return; }
         const visibleEvents = events.filter(e => e.dataset.hidden !== '1');
         visibleEvents.sort(comparator(mode));
-
         let resultSection = main.querySelector('section[data-virtual-results]');
         if (!resultSection) {
             resultSection = document.createElement('section');
             resultSection.className = 'month-section mb-6';
             resultSection.dataset.virtualResults = '1';
             const h = document.createElement('h2');
-            h.className = 'text-xs uppercase tracking-widest opacity-60 mb-2 px-1 font-semibold';
-            h.textContent = 'Résultats triés';
+            h.className = 'month-title text-2xl sm:text-3xl mb-3 px-1';
+            h.innerHTML = 'Résultats <em>triés</em>';
             resultSection.appendChild(h);
-            const inner = document.createElement('div');
-            inner.className = 'space-y-2';
-            resultSection.appendChild(inner);
+            const grid = document.createElement('div');
+            grid.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3';
+            resultSection.appendChild(grid);
             main.appendChild(resultSection);
         }
         sections.forEach(s => s.style.display = 'none');
         resultSection.style.display = '';
-        const inner = resultSection.querySelector('.space-y-2');
-        visibleEvents.forEach(ev => inner.appendChild(ev));
+        const grid = resultSection.querySelector('.grid');
+        visibleEvents.forEach(ev => grid.appendChild(ev));
     }
 
-    // --- Stats ---
+    /* ─────── STATS ─────── */
     function updateStats() {
         const visible = events.filter(e => e.dataset.hidden !== '1');
         document.getElementById('stat-count').textContent = visible.length;
-
-        let totalSeats = 0;
-        let hasPreciseSeats = false;
+        let totalSeats = 0, hasPreciseSeats = false;
         visible.forEach(ev => {
             const n = parseInt(ev.dataset.seats, 10);
-            if (n > 0 && n < 9999) {
-                totalSeats += n;
-                hasPreciseSeats = true;
-            }
+            if (n > 0 && n < 9999) { totalSeats += n; hasPreciseSeats = true; }
         });
         document.getElementById('stat-seats').textContent = hasPreciseSeats ? totalSeats : '—';
-
         const eurPrices = visible
             .filter(e => e.dataset.hasPrice === '1' && e.dataset.currency === 'EUR')
             .map(e => parseInt(e.dataset.priceCents, 10) / 100);
         const priceEl = document.getElementById('stat-price');
-        if (eurPrices.length === 0) {
-            priceEl.textContent = '—';
-        } else {
-            const min = Math.min(...eurPrices);
-            const max = Math.max(...eurPrices);
+        if (eurPrices.length === 0) priceEl.textContent = '—';
+        else {
+            const min = Math.min(...eurPrices), max = Math.max(...eurPrices);
             priceEl.textContent = (min === max) ? `${min} €` : `${min}–${max} €`;
         }
     }
 
-    // --- Listeners ---
+    /* ─────── VIEW SWITCHER ─────── */
+    viewSwitcher.addEventListener('click', e => {
+        const btn = e.target.closest('button[data-view]');
+        if (!btn) return;
+        viewSwitcher.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const view = btn.dataset.view;
+        viewList.classList.toggle('hidden', view !== 'list');
+        viewCalendar.classList.toggle('hidden', view !== 'calendar');
+        if (view === 'calendar') rebuildCalendar();
+    });
+
+    /* ─────── CALENDRIER ─────── */
+    const calSections = Array.from(document.querySelectorAll('.cal-month-section'));
+    let calCurrentIdx = 0;
+
+    function eventsByDate() {
+        // ne prend en compte que les events visibles (cohérent avec les filtres)
+        const map = {};
+        events.forEach(ev => {
+            if (ev.dataset.hidden === '1') return;
+            const d = ev.dataset.dateIso;
+            if (!map[d]) map[d] = [];
+            map[d].push(ev);
+        });
+        return map;
+    }
+
+    function renderMonthCells(section, byDate) {
+        const cellsContainer = section.querySelector('[data-cal-cells]');
+        const monthKey = section.dataset.calMonthKey; // "2026-05"
+        const [yearStr, monthStr] = monthKey.split('-');
+        const year = parseInt(yearStr, 10);
+        const month = parseInt(monthStr, 10); // 1..12
+        const firstDay = new Date(year, month - 1, 1);
+        const daysInMonth = new Date(year, month, 0).getDate();
+        // weekday : 0=Lun..6=Dim (correspondance avec affichage L M M J V S D)
+        let startWeekday = firstDay.getDay() - 1; // JS getDay = 0=Sun..6=Sat
+        if (startWeekday < 0) startWeekday = 6;
+
+        cellsContainer.innerHTML = '';
+
+        const today = new Date();
+        const todayIso = today.toISOString().slice(0, 10);
+
+        // Cells vides avant le 1er jour
+        for (let i = 0; i < startWeekday; i++) {
+            const empty = document.createElement('div');
+            empty.className = 'cal-cell';
+            cellsContainer.appendChild(empty);
+        }
+
+        for (let day = 1; day <= daysInMonth; day++) {
+            const iso = `${yearStr}-${monthStr.padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            const cell = document.createElement('div');
+            cell.className = 'cal-cell';
+            if (iso === todayIso) cell.classList.add('today');
+
+            const dayNum = document.createElement('div');
+            dayNum.className = 'cal-day-num';
+            dayNum.textContent = day;
+            cell.appendChild(dayNum);
+
+            const dayEvents = byDate[iso];
+            if (dayEvents && dayEvents.length) {
+                cell.classList.add('has-event');
+                const count = document.createElement('div');
+                count.className = 'cal-event-count';
+                count.textContent = dayEvents.length === 1 ? '1' : `×${dayEvents.length}`;
+                cell.appendChild(count);
+                cell.dataset.iso = iso;
+                cell.title = `${dayEvents.length} sortie(s) le ${iso}`;
+            }
+            cellsContainer.appendChild(cell);
+        }
+    }
+
+    function rebuildCalendar() {
+        const byDate = eventsByDate();
+        calSections.forEach(s => renderMonthCells(s, byDate));
+    }
+
+    function showCalMonth(idx) {
+        if (idx < 0 || idx >= calSections.length) return;
+        calSections.forEach((s, i) => s.classList.toggle('active', i === idx));
+        calCurrentIdx = idx;
+    }
+
+    document.addEventListener('click', e => {
+        if (e.target.closest('[data-cal-next]')) showCalMonth(calCurrentIdx + 1);
+        else if (e.target.closest('[data-cal-prev]')) showCalMonth(calCurrentIdx - 1);
+        else if (e.target.closest('.cal-cell.has-event')) {
+            const cell = e.target.closest('.cal-cell.has-event');
+            const iso = cell.dataset.iso;
+            // Bascule en vue liste et scroll vers la 1ere card de cette date
+            viewSwitcher.querySelector('button[data-view="list"]').click();
+            const card = events.find(ev => ev.dataset.dateIso === iso && ev.dataset.hidden !== '1');
+            if (card) setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'center' }), 50);
+        }
+    });
+
+    /* ─────── LISTENERS GÉNÉRAUX ─────── */
     search.addEventListener('input', applyFilters);
     onlyAvailable.addEventListener('change', applyFilters);
     onlyWeekend.addEventListener('change', applyFilters);
@@ -511,13 +770,8 @@
     orgsToggleAll.addEventListener('click', () => {
         const allActive = activeOrgs.size === orgChips.querySelectorAll('.chip-toggle').length;
         orgChips.querySelectorAll('.chip-toggle').forEach(c => {
-            if (allActive) {
-                c.classList.remove('active');
-                activeOrgs.delete(c.dataset.org);
-            } else {
-                c.classList.add('active');
-                activeOrgs.add(c.dataset.org);
-            }
+            if (allActive) { c.classList.remove('active'); activeOrgs.delete(c.dataset.org); }
+            else { c.classList.add('active'); activeOrgs.add(c.dataset.org); }
         });
         applyFilters();
     });

@@ -21,6 +21,7 @@ DIST_DIR = ROOT / "dist"
 OUTPUT = DIST_DIR / "index.html"
 
 WEEKDAYS_FR = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"]
+WEEKDAYS_FR_ABBREV = ["Lun.", "Mar.", "Mer.", "Jeu.", "Ven.", "Sam.", "Dim."]
 MONTHS_FR_LONG = [
     "", "janvier", "février", "mars", "avril", "mai", "juin",
     "juillet", "août", "septembre", "octobre", "novembre", "décembre",
@@ -54,6 +55,7 @@ class RenderedEvent:
     day_num: int
     month_short: str
     weekday_short: str
+    weekday_long: str          # "Mer." pour bandeau date "Mer. 13 MAI."
     price_display: str | None
     seats_label: str | None
     seats_class: str
@@ -65,10 +67,14 @@ class RenderedEvent:
     currency: str
     seats_num: int  # -1 si inconnu, 0 si complet, N si dispo précis, 9999 si "Dispo" sans nombre
     is_weekend: bool
-    # Niveaux : list de dicts {raw, canonical, remaining?, max?}
+    # Niveaux
     levels: list[dict]
-    canonical_levels_csv: str  # tous les canoniques de l'event (info, badges)
-    bookable_levels_csv: str   # niveaux où il reste réellement des places (filtre)
+    canonical_levels_csv: str
+    bookable_levels_csv: str
+    # Logo : URL absolue si dispo (RideApp), sinon vide (fallback initiales en CSS)
+    organizer_logo_url: str
+    organizer_initials: str    # 2 lettres pour le fallback ("MG", "DD", etc.)
+    organizer_color: str       # couleur HSL stable pour le fallback
 
 
 def render(db_path: Path = DB_PATH, output: Path = OUTPUT) -> int:
@@ -120,6 +126,10 @@ def _row_to_rendered(r: sqlite3.Row) -> RenderedEvent:
     levels = json.loads(r["levels"] or "[]")
     # Tri stable par ordre canonique pour cohérence visuelle entre toutes les cards
     levels.sort(key=lambda lv: _LEVEL_ORDER.get(lv.get("canonical", "autre"), 99))
+
+    organizer_logo_url = raw.get("organizer_logo_url") or ""
+    organizer_initials = _initials_for(r["organizer"] or "")
+    organizer_color = _color_for(r["organizer"] or "")
 
     seats_label, seats_class, seats_num = _seats_display(r, raw)
     price_display = _price_display(r["price_cents"], r["currency"])
@@ -173,6 +183,7 @@ def _row_to_rendered(r: sqlite3.Row) -> RenderedEvent:
         day_num=d.day,
         month_short=MONTHS_FR_SHORT[d.month],
         weekday_short=WEEKDAYS_FR[d.weekday()],
+        weekday_long=WEEKDAYS_FR_ABBREV[d.weekday()],
         price_display=price_display,
         seats_label=seats_label,
         seats_class=seats_class,
@@ -186,7 +197,32 @@ def _row_to_rendered(r: sqlite3.Row) -> RenderedEvent:
         levels=levels,
         canonical_levels_csv=canonical_csv,
         bookable_levels_csv=bookable_csv,
+        organizer_logo_url=organizer_logo_url,
+        organizer_initials=organizer_initials,
+        organizer_color=organizer_color,
     )
+
+
+def _initials_for(name: str) -> str:
+    """Renvoie 2 lettres uppercase pour servir d'avatar fallback."""
+    if not name:
+        return "?"
+    parts = [p for p in name.replace("-", " ").replace("/", " ").split() if p and p[0].isalnum()]
+    if len(parts) >= 2:
+        return (parts[0][0] + parts[1][0]).upper()
+    if len(parts) == 1:
+        return parts[0][:2].upper()
+    return name[:2].upper()
+
+
+def _color_for(name: str) -> str:
+    """Hash → teinte HSL stable pour différencier visuellement chaque organisateur."""
+    if not name:
+        return "200deg"
+    h = 0
+    for c in name:
+        h = (h * 31 + ord(c)) % 360
+    return f"{h}deg"
 
 
 def _seats_display(r: sqlite3.Row, raw: dict) -> tuple[str | None, str, int]:

@@ -97,6 +97,20 @@ def _item_to_event(item: dict, *, today: date, client: httpx.Client) -> Event | 
 
     levels = _fetch_groups(client, event_id) if event_id else []
 
+    # Logo de l'organisateur. L'API renvoie parfois un chemin relatif
+    # ("/data/public/.../...png") et parfois une URL absolue sur "rideapp.pro"
+    # — ce dernier domaine ne résout pas (CDN interne). On normalise toujours
+    # vers `shop.rideapp.fr` qui sert le même contenu publiquement.
+    org_image_path = item.get("organizerImageUrl") or ""
+    organizer_logo_url = ""
+    if org_image_path:
+        # Extraire la partie /data/... quelle que soit la forme
+        if "/data/" in org_image_path:
+            tail = "/data/" + org_image_path.split("/data/", 1)[1]
+            organizer_logo_url = SHOP_BASE + tail
+        elif org_image_path.startswith("/"):
+            organizer_logo_url = SHOP_BASE + org_image_path
+
     return Event(
         organizer=organizer,
         source_id=event_id or f"rideapp:{organizer_slug}:{parsed.isoformat()}",
@@ -111,6 +125,7 @@ def _item_to_event(item: dict, *, today: date, client: httpx.Client) -> Event | 
         raw_data={
             "remaining_seats": remaining,
             "organizer_slug": organizer_slug,
+            "organizer_logo_url": organizer_logo_url,
             "event_day_id": event_day_id,
             "order_url_external": item.get("orderUrl"),
             "is_partner": item.get("isPartner"),
