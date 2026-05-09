@@ -44,12 +44,45 @@
     .event[data-weekend="1"] .date-weekday {
         color: hsl(var(--er));
     }
-    /* Chip toggle clean : sélectionné = primary, sinon ghost */
+    /* Chip toggle — états visuels explicites (override DaisyUI btn-outline)
+       - Normal : bord léger, texte mute
+       - Hover : bord plus marqué, fond léger
+       - Focus clavier : ring primary visible
+       - Active (sélectionné) : fond primary plein
+       - Active + hover : primary légèrement assombri
+       - Active + focus : ring primary */
+    .chip-toggle {
+        transition: background-color .15s ease, border-color .15s ease, color .15s ease, box-shadow .15s ease;
+    }
+    .chip-toggle:hover {
+        background-color: hsl(var(--bc) / 0.08) !important;
+        border-color: hsl(var(--bc) / 0.45) !important;
+        color: hsl(var(--bc)) !important;
+    }
+    .chip-toggle:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 2px hsl(var(--b1)), 0 0 0 4px hsl(var(--p));
+    }
     .chip-toggle.active {
-        --tw-bg-opacity: 1;
-        background-color: hsl(var(--p) / var(--tw-bg-opacity));
-        color: hsl(var(--pc));
-        border-color: hsl(var(--p));
+        background-color: hsl(var(--p)) !important;
+        color: hsl(var(--pc)) !important;
+        border-color: hsl(var(--p)) !important;
+        font-weight: 600;
+    }
+    .chip-toggle.active:hover {
+        background-color: hsl(var(--p) / 0.88) !important;
+        border-color: hsl(var(--p) / 0.88) !important;
+        color: hsl(var(--pc)) !important;
+    }
+    .chip-toggle.active:focus-visible {
+        box-shadow: 0 0 0 2px hsl(var(--b1)), 0 0 0 4px hsl(var(--p));
+    }
+    /* Petit check visible quand sélectionné — repère sans changer la largeur */
+    .chip-toggle.active::before {
+        content: "✓";
+        margin-right: 0.25rem;
+        font-weight: 700;
+        opacity: 0.9;
     }
 
     /* Badges (tags) plus compacts que le défaut DaisyUI :
