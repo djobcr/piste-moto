@@ -1,0 +1,81 @@
+name: Crawl & Deploy
+
+# Crawl horaire des organisateurs + déploiement HTML sur GitHub Pages.
+# Trois déclencheurs :
+#   - cron : toutes les heures pile (UTC)
+#   - workflow_dispatch : bouton "Run workflow" dans l'UI GitHub
+#   - push sur main : redéploie après changement de code/template
+
+on:
+  schedule:
+    - cron: "0 * * * *"
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+# Permissions minimum requises :
+# - contents:write pour commit la DB après crawl
+# - pages:write + id-token:write pour le déploiement GitHub Pages
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+# Évite les déploiements concurrents qui se piétinent
+concurrency:
+  group: pages-deploy
+  cancel-in-progress: false
+
+jobs:
+  crawl-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run unit tests
+        run: python -m unittest discover -s tests
+
+      - name: Run crawl
+        # `continue-on-error` : un scraper qui timeout ne doit pas bloquer le
+        # déploiement — render lit ce qu'il y a en DB.
+        continue-on-error: true
+        run: python crawl.py
+
+      - name: Render HTML (toujours, même si un scraper a échoué)
+        run: python render.py
+
+      - name: Commit DB if changed
+        # On commit `piste.db` pour persister `first_seen_at` et l'historique
+        # des places dispo entre runs. Le `[skip ci]` empêche le re-trigger.
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f piste.db
+          if ! git diff --cached --quiet; then
+            git commit -m "Crawl $(date -u +%Y-%m-%dT%H:%M:%SZ) [skip ci]"
+            git push
+          else
+            echo "DB unchanged, no commit needed."
+          fi
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4

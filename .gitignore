@@ -1,0 +1,31 @@
+# Data
+# piste.db est commité par le workflow GitHub Actions (`git add -f piste.db`)
+# pour persister first_seen_at entre runs. En local, on l'ignore.
+piste.db
+piste.db-journal
+*.sqlite
+*.sqlite3
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Debug — HTMLs bruts capturés à l'analyse, jamais commit
+debug/
+
+# HTML généré : reproductible via `py render.py`
+dist/
