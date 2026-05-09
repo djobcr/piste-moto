@@ -270,25 +270,6 @@ html { scroll-behavior: smooth; }
     </div>
 </section>
 
-<!-- ═══════════════ STATS ═══════════════ -->
-<section class="container mx-auto max-w-5xl px-3 pt-4">
-    <div class="stats stats-horizontal shadow w-full bg-base-200 text-base-content">
-        <div class="stat py-3 px-4">
-            <div class="stat-title text-xs">Sorties visibles</div>
-            <div class="stat-value text-2xl"><span id="stat-count">{{ count_active }}</span></div>
-        </div>
-        <div class="stat py-3 px-4">
-            <div class="stat-title text-xs">Places restantes</div>
-            <div class="stat-value text-2xl"><span id="stat-seats">—</span></div>
-            <div class="stat-desc text-[10px]">depuis RideApp</div>
-        </div>
-        <div class="stat py-3 px-4">
-            <div class="stat-title text-xs">Fourchette prix</div>
-            <div class="stat-value text-2xl"><span id="stat-price">—</span></div>
-        </div>
-    </div>
-</section>
-
 <!-- ═══════════════ FILTRES ═══════════════ -->
 <section class="container mx-auto max-w-5xl px-3 pt-4">
     <div class="card bg-base-200 shadow">
@@ -569,7 +550,6 @@ html { scroll-behavior: smooth; }
             s.style.display = visible === 0 ? 'none' : '';
         });
         applySort();
-        updateStats();
         rebuildCalendar();
     }
 
@@ -623,27 +603,6 @@ html { scroll-behavior: smooth; }
         resultSection.style.display = '';
         const grid = resultSection.querySelector('.grid');
         visibleEvents.forEach(ev => grid.appendChild(ev));
-    }
-
-    /* ─────── STATS ─────── */
-    function updateStats() {
-        const visible = events.filter(e => e.dataset.hidden !== '1');
-        document.getElementById('stat-count').textContent = visible.length;
-        let totalSeats = 0, hasPreciseSeats = false;
-        visible.forEach(ev => {
-            const n = parseInt(ev.dataset.seats, 10);
-            if (n > 0 && n < 9999) { totalSeats += n; hasPreciseSeats = true; }
-        });
-        document.getElementById('stat-seats').textContent = hasPreciseSeats ? totalSeats : '—';
-        const eurPrices = visible
-            .filter(e => e.dataset.hasPrice === '1' && e.dataset.currency === 'EUR')
-            .map(e => parseInt(e.dataset.priceCents, 10) / 100);
-        const priceEl = document.getElementById('stat-price');
-        if (eurPrices.length === 0) priceEl.textContent = '—';
-        else {
-            const min = Math.min(...eurPrices), max = Math.max(...eurPrices);
-            priceEl.textContent = (min === max) ? `${min} €` : `${min}–${max} €`;
-        }
     }
 
     /* ─────── VIEW SWITCHER ─────── */
