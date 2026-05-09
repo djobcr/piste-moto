@@ -53,7 +53,8 @@ class RenderedEvent:
     is_weekend: bool
     # Niveaux : list de dicts {raw, canonical, remaining?, max?}
     levels: list[dict]
-    canonical_levels_csv: str  # "debutant,intermediaire,..." pour filtrage JS data-attr
+    canonical_levels_csv: str  # tous les canoniques de l'event (info, badges)
+    bookable_levels_csv: str   # niveaux où il reste réellement des places (filtre)
 
 
 def render(db_path: Path = DB_PATH, output: Path = OUTPUT) -> int:
@@ -114,6 +115,19 @@ def _row_to_rendered(r: sqlite3.Row) -> RenderedEvent:
         canonical_set = {"open"}
     canonical_csv = ",".join(sorted(canonical_set))
 
+    # `bookable_levels_csv` : sous-ensemble des niveaux où il reste des places.
+    # Règle : remaining = None (info absente) → bookable ; remaining > 0 → bookable ;
+    # remaining == 0 → exclu. Un event sans aucun level → "open" implicite.
+    if levels:
+        bookable_set: set[str] = set()
+        for lv in levels:
+            rem = lv.get("remaining")
+            if rem is None or (isinstance(rem, int) and rem > 0):
+                bookable_set.add(lv.get("canonical", "autre"))
+    else:
+        bookable_set = {"open"}
+    bookable_csv = ",".join(sorted(bookable_set))
+
     search_blob = " ".join([
         r["organizer"] or "",
         r["title"] or "",
@@ -144,6 +158,7 @@ def _row_to_rendered(r: sqlite3.Row) -> RenderedEvent:
         is_weekend=d.weekday() >= 5,  # samedi=5, dimanche=6
         levels=levels,
         canonical_levels_csv=canonical_csv,
+        bookable_levels_csv=bookable_csv,
     )
 
 

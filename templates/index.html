@@ -400,6 +400,7 @@ footer {
                  data-currency="{{ ev.currency }}"
                  data-seats="{{ ev.seats_num }}"
                  data-levels="{{ ev.canonical_levels_csv }}"
+                 data-levels-bookable="{{ ev.bookable_levels_csv }}"
                  data-text="{{ ev.search_blob | e }}">
             <div class="event-date">
                 <div class="event-day">{{ ev.day_num }}</div>
@@ -479,14 +480,18 @@ footer {
         return false;
     }
 
-    function levelMatchesAnyChip(levelsCsv) {
+    function levelMatchesAnyChip(bookableCsv) {
+        // Pas de filtre actif → tous les events passent.
         if (activeLevels.size === 0) return true;
-        const evLevels = (levelsCsv || 'open').split(',');
-        for (const l of evLevels) {
+        // bookableCsv contient uniquement les niveaux où il reste des places
+        // (ou pour lesquels on n'a pas l'info — on suppose dispo). Un event
+        // entièrement plein a bookableCsv vide et sera masqué.
+        const bookable = (bookableCsv || '').split(',').filter(Boolean);
+        for (const l of bookable) {
             if (activeLevels.has(l)) return true;
         }
-        // Si l'event est tagué "open" (sans niveaux structurés), il passe quel que soit le filtre.
-        return evLevels.includes('open');
+        // "open" = pas de niveau structuré → matche n'importe quel filtre choisi.
+        return bookable.includes('open');
     }
 
     function applyFilters() {
@@ -502,7 +507,7 @@ footer {
             const priceCents = parseInt(ev.dataset.priceCents, 10) || 0;
             const hasPrice = ev.dataset.hasPrice === '1';
             const currency = ev.dataset.currency || 'EUR';
-            const levelsCsv = ev.dataset.levels || '';
+            const bookableCsv = ev.dataset.levelsBookable || '';
 
             let hide = false;
             if (q && !text.includes(q)) hide = true;
@@ -510,7 +515,7 @@ footer {
             if (weekendOnly && !weekend) hide = true;
             if (!activeOrgs.has(org)) hide = true;
             if (!priceMatchesAnyBucket(priceCents, hasPrice, currency)) hide = true;
-            if (!levelMatchesAnyChip(levelsCsv)) hide = true;
+            if (!levelMatchesAnyChip(bookableCsv)) hide = true;
             ev.dataset.hidden = hide ? '1' : '0';
         });
 
