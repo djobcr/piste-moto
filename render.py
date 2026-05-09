@@ -30,6 +30,20 @@ MONTHS_FR_SHORT = [
     "Juil", "Août", "Sept", "Oct", "Nov", "Déc",
 ]
 
+# Ordre d'affichage canonique des niveaux : du plus accessible au plus élevé.
+# Permet d'afficher les badges dans le même ordre sur toutes les cards, quelle
+# que soit la source (RideApp / PMMC / Spoon / etc. ont chacun leur ordre).
+_LEVEL_ORDER = {
+    "debutant":      1,
+    "intermediaire": 2,
+    "confirme":      3,
+    "expert":        4,
+    "open":          5,
+    "side_car":      6,
+    "vip":           7,
+    "autre":         99,
+}
+
 
 @dataclass
 class RenderedEvent:
@@ -104,6 +118,8 @@ def _row_to_rendered(r: sqlite3.Row) -> RenderedEvent:
     d = date.fromisoformat(r["date"])
     raw = json.loads(r["raw_data"] or "{}")
     levels = json.loads(r["levels"] or "[]")
+    # Tri stable par ordre canonique pour cohérence visuelle entre toutes les cards
+    levels.sort(key=lambda lv: _LEVEL_ORDER.get(lv.get("canonical", "autre"), 99))
 
     seats_label, seats_class, seats_num = _seats_display(r, raw)
     price_display = _price_display(r["price_cents"], r["currency"])
