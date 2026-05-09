@@ -115,15 +115,26 @@ def _row_to_rendered(r: sqlite3.Row) -> RenderedEvent:
         canonical_set = {"open"}
     canonical_csv = ",".join(sorted(canonical_set))
 
-    # `bookable_levels_csv` : sous-ensemble des niveaux où il reste des places.
-    # Règle : remaining = None (info absente) → bookable ; remaining > 0 → bookable ;
-    # remaining == 0 → exclu. Un event sans aucun level → "open" implicite.
+    # `bookable_levels_csv` : niveaux qu'on peut encore réserver.
+    # Priorité des signaux par level :
+    #   1. `remaining` int       (RideApp)         → bookable si > 0
+    #   2. `is_in_stock` bool    (PMMC, Spoon)     → bookable si True
+    #   3. ni l'un ni l'autre    (SuperLaps, etc.) → bookable (fallback prudent)
+    # Event sans aucun level (DDE 34, AK Racing, etc.) → "open" implicite.
     if levels:
         bookable_set: set[str] = set()
         for lv in levels:
+            canon = lv.get("canonical", "autre")
             rem = lv.get("remaining")
-            if rem is None or (isinstance(rem, int) and rem > 0):
-                bookable_set.add(lv.get("canonical", "autre"))
+            in_stock = lv.get("is_in_stock")
+            if rem is not None:
+                if rem > 0:
+                    bookable_set.add(canon)
+            elif in_stock is not None:
+                if in_stock:
+                    bookable_set.add(canon)
+            else:
+                bookable_set.add(canon)
     else:
         bookable_set = {"open"}
     bookable_csv = ",".join(sorted(bookable_set))

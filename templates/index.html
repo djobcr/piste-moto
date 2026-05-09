@@ -272,6 +272,7 @@
                         <div class="flex flex-wrap gap-1 mt-1.5">
                             {% for lv in ev.levels %}
                                 {% if lv.remaining is defined %}
+                                    {# RideApp : nombre exact de places #}
                                     {% if lv.remaining == 0 %}
                                         <span class="badge badge-sm badge-ghost line-through opacity-50" title="{{ lv.raw }} : complet">{{ lv.raw }}</span>
                                     {% elif lv.remaining < 5 %}
@@ -279,7 +280,15 @@
                                     {% else %}
                                         <span class="badge badge-sm badge-success badge-outline" title="{{ lv.raw }} : {{ lv.remaining }}/{{ lv.max }}">{{ lv.raw }} <span class="font-bold tabular-nums">{{ lv.remaining }}</span></span>
                                     {% endif %}
+                                {% elif lv.is_in_stock is defined %}
+                                    {# PMMC, Spoon Racing : binaire dispo/complet #}
+                                    {% if lv.is_in_stock %}
+                                        <span class="badge badge-sm badge-success badge-outline" title="{{ lv.raw }} : dispo">{{ lv.raw }}</span>
+                                    {% else %}
+                                        <span class="badge badge-sm badge-ghost line-through opacity-50" title="{{ lv.raw }} : complet">{{ lv.raw }}</span>
+                                    {% endif %}
                                 {% else %}
+                                    {# SuperLaps : niveau exposé sans info de stock #}
                                     <span class="badge badge-sm badge-outline" title="{{ lv.raw }}">{{ lv.raw }}</span>
                                 {% endif %}
                             {% endfor %}

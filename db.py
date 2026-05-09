@@ -56,12 +56,15 @@ class Level:
     `canonical` est le slug normalisé (debutant, intermediaire, confirme,
     expert, open) — utilisé pour le filtrage côté UI.
     `raw` est le label affiché (ex: "Débutant", "Pilote", "Tous niveaux").
-    `remaining` et `max` peuvent être None si la source ne les expose pas.
+    `remaining` et `max` : nombre exact de places (RideApp uniquement).
+    `is_in_stock` : signal binaire dispo/complet (PMMC, Spoon Racing via WC
+        Store API par variation). None = info absente, fallback "dispo prudent".
     """
     raw: str
     canonical: str
     remaining: int | None = None
     max: int | None = None
+    is_in_stock: bool | None = None
 
 
 @dataclass
@@ -116,6 +119,7 @@ def upsert_events(events: list[Event], db_path: Path = DB_PATH) -> tuple[int, in
                         "canonical": lv.canonical,
                         "remaining": lv.remaining,
                         "max": lv.max,
+                        "is_in_stock": lv.is_in_stock,
                     }.items() if v is not None}
                     for lv in (ev.levels or [])
                 ],

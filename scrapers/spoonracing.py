@@ -34,8 +34,10 @@ def fetch(today: date | None = None) -> list[Event]:
         today = date.today()
 
     headers = {"User-Agent": USER_AGENT, "Accept": "application/json"}
-    products: list[dict] = []
+    events: list[Event] = []
     with httpx.Client(timeout=HTTP_TIMEOUT, headers=headers) as client:
+        # Pagination
+        products: list[dict] = []
         page = 1
         while True:
             resp = client.get(API_URL, params={"per_page": PER_PAGE, "page": page})
@@ -48,11 +50,11 @@ def fetch(today: date | None = None) -> list[Event]:
                 break
             page += 1
 
-    events: list[Event] = []
-    for p in products:
-        ev = _product_to_event(p, today=today)
-        if ev is not None:
-            events.append(ev)
+        # On reste dans le client httpx pour les fetches de variations
+        for p in products:
+            ev = _product_to_event(p, today=today, client=client)
+            if ev is not None:
+                events.append(ev)
     return events
 
 
@@ -61,7 +63,7 @@ def _is_ales_product(name: str) -> bool:
     return n.startswith("alès") or n.startswith("ales")
 
 
-def _product_to_event(p: dict, *, today: date) -> Event | None:
+def _product_to_event(p: dict, *, today: date, client: httpx.Client) -> Event | None:
     name = clean_text(p.get("name") or "")
     if not _is_ales_product(name):
         return None
@@ -83,7 +85,7 @@ def _product_to_event(p: dict, *, today: date) -> Event | None:
         currency=prices.get("currency_code") or "EUR",
         available=bool(p.get("is_in_stock", True)),
         booking_url=p.get("permalink") or "",
-        levels=_extract_levels(p),
+        levels=_extract_levels(p, client),
         raw_data={
             "id": p.get("id"),
             "slug": p.get("slug"),
@@ -92,29 +94,83 @@ def _product_to_event(p: dict, *, today: date) -> Event | None:
     )
 
 
-def _extract_levels(p: dict) -> list[Level]:
-    """Spoon Racing expose un attribut 'Groupe' avec terms ['Débutant', 'Moyen', 'Pilote'].
+def _extract_levels(p: dict, client: httpx.Client) -> list[Level]:
+    """Extrait les niveaux Spoon Racing (Débutant/Moyen/Pilote) avec stock binaire.
 
-    Certains terms incluent les options coaching, ex:
-    'Débutant + coaching 3 sessions matin (+140€)'. On déduplique sur le slug
-    canonique pour garder un seul "Débutant" propre.
+    Plusieurs variations partagent le même niveau (sans coaching / avec coaching).
+    On agrège : un niveau est "in_stock" si AU MOINS UNE de ses variations a
+    `is_in_stock=True`. On utilise la liste `variations` du produit pour
+    récupérer les variation_ids puis on fetch chacune.
     """
+    # Trouver l'attribut "Groupe"
+    groupe_attr_name: str | None = None
     for attr in (p.get("attributes") or []):
-        attr_name = (attr.get("name") or "").lower()
-        if "groupe" in attr_name:
-            terms = attr.get("terms") or []
-            seen: set[str] = set()
-            levels: list[Level] = []
-            for t in terms:
-                raw_full = (t.get("name") or "").strip()
-                if not raw_full:
-                    continue
-                # Garde la base avant " + coaching" ou " ("
-                base = raw_full.split(" + ")[0].split(" (")[0].strip()
-                canon = normalize_level(base)
-                if canon in seen or canon == "autre":
-                    continue
-                seen.add(canon)
-                levels.append(Level(raw=base, canonical=canon))
-            return levels
-    return []
+        if "groupe" in (attr.get("name") or "").lower():
+            groupe_attr_name = attr.get("name")
+            break
+    if groupe_attr_name is None:
+        return []
+
+    # Map slug → raw label (depuis les terms)
+    terms_by_slug: dict[str, str] = {}
+    for attr in (p.get("attributes") or []):
+        if attr.get("name") == groupe_attr_name:
+            for t in (attr.get("terms") or []):
+                slug = (t.get("slug") or "").lower()
+                name = (t.get("name") or "").strip()
+                if slug and name:
+                    terms_by_slug[slug] = name
+
+    # Pour chaque variation, on fetch + on agrège par canonical
+    # Format: canonical → {"raw": str, "is_in_stock": True/False/None}
+    aggregated: dict[str, dict] = {}
+
+    for v in (p.get("variations") or []):
+        vid = v.get("id")
+        if not isinstance(vid, int):
+            continue
+
+        slug_value: str | None = None
+        for a in (v.get("attributes") or []):
+            if a.get("name") == groupe_attr_name and a.get("value"):
+                slug_value = a["value"]
+                break
+        if slug_value is None:
+            continue
+
+        raw_full = terms_by_slug.get(slug_value, slug_value.replace("-", " ").capitalize())
+        # "Débutant + coaching 3 sessions (+140€)" → "Débutant"
+        base = raw_full.split(" + ")[0].split(" (")[0].strip()
+        canon = normalize_level(base)
+        if canon == "autre":
+            continue
+
+        in_stock = _fetch_variation_stock(client, vid)
+
+        if canon not in aggregated:
+            aggregated[canon] = {"raw": base, "is_in_stock": in_stock}
+        else:
+            # Agrégation : si AU MOINS une variation est in_stock, le niveau l'est
+            existing = aggregated[canon]["is_in_stock"]
+            if in_stock is True:
+                aggregated[canon]["is_in_stock"] = True
+            elif in_stock is False and existing is None:
+                aggregated[canon]["is_in_stock"] = False
+
+    return [
+        Level(raw=info["raw"], canonical=canon, is_in_stock=info["is_in_stock"])
+        for canon, info in aggregated.items()
+    ]
+
+
+def _fetch_variation_stock(client: httpx.Client, variation_id: int) -> bool | None:
+    """`is_in_stock` pour une variation Spoon Racing, ou None si requête KO."""
+    try:
+        r = client.get(f"https://www.spoonracing.fr/wp-json/wc/store/v1/products/{variation_id}")
+        if r.status_code != 200:
+            return None
+        data = r.json()
+        val = data.get("is_in_stock")
+        return val if isinstance(val, bool) else None
+    except (httpx.HTTPError, ValueError):
+        return None
