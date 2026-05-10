@@ -35,7 +35,7 @@ publie automatiquement le HTML sur GitHub Pages. Setup en 5 étapes :
    git branch -M main
    git add .
    git commit -m "Initial commit"
-   gh repo create piste-moto-ales --public --source=. --push
+   gh repo create piste-moto --public --source=. --push
    # ou via l'UI GitHub : créer le repo puis git remote add + git push
    ```
 
@@ -49,7 +49,7 @@ publie automatiquement le HTML sur GitHub Pages. Setup en 5 étapes :
    (manuel) ou attendre l'heure pile (cron).
 
 5. **Récupérer l'URL** : `Settings → Pages` affiche l'URL finale, du genre
-   `https://tonpseudo.github.io/piste-moto-ales/`.
+   `https://tonpseudo.github.io/piste-moto/`.
 
 Le cron tourne ensuite toutes les heures sans intervention. Si un scraper
 échoue, le workflow continue et redéploie avec les autres sources (la DB
