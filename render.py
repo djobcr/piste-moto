@@ -97,7 +97,15 @@ def render(db_path: Path = DB_PATH) -> dict:
     # 3. Group by circuit_slug (depuis raw_data)
     events_by_slug: dict[str, list[sqlite3.Row]] = defaultdict(list)
     organizers_global: set[str] = set()
-    images_by_slug: dict[str, str] = {}
+    # Image par circuit : priorité au champ `image_url` de circuits.json (stable,
+    # versionné), fallback sur ce que les events RideApp exposent dynamiquement
+    # (utile si un nouveau circuit apparaît sur RideApp sans qu'on l'ait encore
+    # ajouté à circuits.json).
+    images_by_slug: dict[str, str] = {
+        slug: c["image_url"]
+        for slug, c in circuits_by_slug.items()
+        if c.get("image_url")
+    }
 
     for r in rows:
         raw = json.loads(r["raw_data"] or "{}")
@@ -106,7 +114,7 @@ def render(db_path: Path = DB_PATH) -> dict:
             continue  # event sans circuit identifié, ignoré côté rendu
         events_by_slug[slug].append(r)
         organizers_global.add(r["organizer"])
-        # Image du circuit : si on n'en a pas encore et qu'un event en a une, on la garde
+        # Fallback image RideApp si pas dans circuits.json
         img = raw.get("circuit_image_url")
         if img and slug not in images_by_slug:
             images_by_slug[slug] = img

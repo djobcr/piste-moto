@@ -12,7 +12,16 @@
       "full_name": "Pôle Mécanique Alès Cévennes",
       "address": "Vallon de, CR Valat de Fontanes, 30520 Saint-Martin-de-Valgalgues",
       "description": "Le circuit d'Alès, situé dans le sud de la France, fait partie du Pôle Mécanique d'Alès Cévennes. Très apprécié pour les essais techniques, il accueille également des journées de roulage pour amateurs et professionnels.",
-      "aliases": ["ales", "circuit ales", "circuit d ales", "pole mecanique", "pole mecanique ales", "ales cevennes", "circuit d ales cevennes"]
+      "aliases": [
+        "ales",
+        "circuit ales",
+        "circuit d ales",
+        "pole mecanique",
+        "pole mecanique ales",
+        "ales cevennes",
+        "circuit d ales cevennes"
+      ],
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/ales.png"
     },
     {
       "slug": "ledenon",
@@ -24,7 +33,17 @@
       "full_name": "Circuit de Lédenon",
       "address": "30210 Lédenon",
       "description": "Tracé technique et vallonné de 3,15 km dans le Gard, réputé pour ses dénivelés et sa difficulté. Un classique du Sud-Est.",
-      "aliases": ["ledenon", "circuit ledenon", "circuit de ledenon", "ledenonsamedi", "ledenondimanche", "ledenonlundi", "ledenonmardi", "ledenonvendredi"]
+      "aliases": [
+        "ledenon",
+        "circuit ledenon",
+        "circuit de ledenon",
+        "ledenonsamedi",
+        "ledenondimanche",
+        "ledenonlundi",
+        "ledenonmardi",
+        "ledenonvendredi"
+      ],
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/ledenon.jpg"
     },
     {
       "slug": "le-luc",
@@ -36,7 +55,14 @@
       "full_name": "Circuit du Var (Le Luc)",
       "address": "RD33, 83340 Le Luc",
       "description": "Circuit du Var à Le Luc-en-Provence, 2,43 km. Tracé technique avec sections rapides et virages serrés.",
-      "aliases": ["le luc", "luc", "circuit le luc", "circuit du var", "le luc en provence"]
+      "aliases": [
+        "le luc",
+        "luc",
+        "circuit le luc",
+        "circuit du var",
+        "le luc en provence"
+      ],
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/luc.jpg"
     },
     {
       "slug": "vaison-piste",
@@ -48,7 +74,12 @@
       "full_name": "Vaison Piste",
       "address": "Vaison-la-Romaine",
       "description": "Petit circuit technique en Drôme, idéal pour s'entraîner et progresser sur un format compact.",
-      "aliases": ["vaison piste", "vaison-piste", "vaison"]
+      "aliases": [
+        "vaison piste",
+        "vaison-piste",
+        "vaison"
+      ],
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/vaison-piste.jpg"
     },
     {
       "slug": "mas-du-clos",
@@ -60,7 +91,12 @@
       "full_name": "Circuit du Mas du Clos",
       "address": "23200 Saint-Avit-de-Tardes",
       "description": "Tracé sinueux dans la Creuse, 2,45 km, ambiance familiale.",
-      "aliases": ["mas du clos", "mas-du-clos", "le mas du clos"]
+      "aliases": [
+        "mas du clos",
+        "mas-du-clos",
+        "le mas du clos"
+      ],
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/mas-du-clos.jpg"
     },
     {
       "slug": "paul-ricard",
@@ -72,7 +108,13 @@
       "full_name": "Circuit Paul Ricard",
       "address": "2760 Route des Hauts du Camp, 83330 Le Castellet",
       "description": "Circuit de F1 historique au Castellet, 5,79 km. Configuration grande boucle ou variantes plus courtes.",
-      "aliases": ["paul ricard", "le castellet", "castellet", "circuit paul ricard"]
+      "aliases": [
+        "paul ricard",
+        "le castellet",
+        "castellet",
+        "circuit paul ricard"
+      ],
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/paul-ricard.jpg"
     },
     {
       "slug": "driving-center-paul-ricard",
@@ -84,7 +126,12 @@
       "full_name": "Driving Center Paul Ricard",
       "address": "RDN8, 83330 Le Castellet",
       "description": "Centre de pilotage adjacent au circuit Paul Ricard, idéal pour formation et roulages encadrés.",
-      "aliases": ["driving center", "driving center paul ricard", "driving"]
+      "aliases": [
+        "driving center",
+        "driving center paul ricard",
+        "driving"
+      ],
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/driving-center-paul-ricard.jpg"
     },
     {
       "slug": "dijon-prenois",
@@ -96,7 +143,13 @@
       "full_name": "Circuit Dijon Prenois",
       "address": "21370 Prenois",
       "description": "Circuit historique à Prenois, 3,8 km. Réputé pour sa rapide montée vers la Combe.",
-      "aliases": ["dijon", "prenois", "dijon prenois", "dijon-prenois"]
+      "aliases": [
+        "dijon",
+        "prenois",
+        "dijon prenois",
+        "dijon-prenois"
+      ],
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/dijon-prenois.png"
     },
     {
       "slug": "vigeant",
@@ -108,7 +161,12 @@
       "full_name": "Circuit du Val de Vienne (Le Vigeant)",
       "address": "86150 Le Vigeant",
       "description": "Circuit du Val de Vienne, 3,74 km dans la Vienne. Tracé fluide et roulant.",
-      "aliases": ["vigeant", "le vigeant", "val de vienne"]
+      "aliases": [
+        "vigeant",
+        "le vigeant",
+        "val de vienne"
+      ],
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/vigeant.png"
     },
     {
       "slug": "mirecourt",
@@ -120,7 +178,11 @@
       "full_name": "Circuit de Mirecourt",
       "address": "88500 Mirecourt",
       "description": "Petit circuit dans les Vosges, idéal pour débuter ou progresser sur un format compact.",
-      "aliases": ["mirecourt", "circuit mirecourt"]
+      "aliases": [
+        "mirecourt",
+        "circuit mirecourt"
+      ],
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/mirecourt.jpg"
     },
     {
       "slug": "magny-cours-club",
@@ -132,7 +194,11 @@
       "full_name": "Circuit de Nevers Magny-Cours (tracé Club)",
       "address": "58470 Magny-Cours",
       "description": "Tracé Club du circuit de Nevers Magny-Cours, 2,46 km — version courte.",
-      "aliases": ["magny cours club", "magny-cours club"]
+      "aliases": [
+        "magny cours club",
+        "magny-cours club"
+      ],
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/magny-cours-club.jpg"
     },
     {
       "slug": "magny-cours-f1",
@@ -144,7 +210,14 @@
       "full_name": "Circuit de Nevers Magny-Cours (tracé F1)",
       "address": "58470 Magny-Cours",
       "description": "Le grand tracé F1 de Magny-Cours, 4,41 km. Ancien GP de France.",
-      "aliases": ["magny cours", "magny-cours", "magny cours f1", "magny-cours f1", "nevers magny cours"]
+      "aliases": [
+        "magny cours",
+        "magny-cours",
+        "magny cours f1",
+        "magny-cours f1",
+        "nevers magny cours"
+      ],
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/magny-cours-f1.jpg"
     },
     {
       "slug": "le-mans-bugatti",
@@ -156,7 +229,14 @@
       "full_name": "Circuit Bugatti — Le Mans",
       "address": "72100 Le Mans",
       "description": "Circuit Bugatti, 4,19 km, qui partage une partie du tracé du célèbre 24 Heures.",
-      "aliases": ["le mans", "le mans bugatti", "bugatti", "le mans-bugatti", "circuit bugatti"]
+      "aliases": [
+        "le mans",
+        "le mans bugatti",
+        "bugatti",
+        "le mans-bugatti",
+        "circuit bugatti"
+      ],
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/le-mans.jpg"
     },
     {
       "slug": "bresse",
@@ -168,7 +248,12 @@
       "full_name": "Circuit de Bresse",
       "address": "71580 Frontenaud",
       "description": "Circuit de Bresse en Saône-et-Loire, 3,7 km.",
-      "aliases": ["bresse", "circuit de bresse", "frontenaud"]
+      "aliases": [
+        "bresse",
+        "circuit de bresse",
+        "frontenaud"
+      ],
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/bresse.jpg"
     },
     {
       "slug": "carole",
@@ -180,7 +265,12 @@
       "full_name": "Circuit Carole",
       "address": "RD212, 93290 Tremblay-en-France",
       "description": "Circuit Carole en région parisienne, 2,07 km. Plus ancien circuit moto de France.",
-      "aliases": ["carole", "circuit carole", "tremblay"]
+      "aliases": [
+        "carole",
+        "circuit carole",
+        "tremblay"
+      ],
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/carole.jpg"
     },
     {
       "slug": "chambley",
@@ -192,7 +282,12 @@
       "full_name": "Circuit de Chambley",
       "address": "54890 Chambley-Bussières",
       "description": "Long circuit aérodrome reconverti, 5,1 km dans le Grand Est.",
-      "aliases": ["chambley", "chambley-bussieres", "chambley bussieres"]
+      "aliases": [
+        "chambley",
+        "chambley-bussieres",
+        "chambley bussieres"
+      ],
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/chambley.jpg"
     },
     {
       "slug": "issoire",
@@ -204,7 +299,11 @@
       "full_name": "Circuit d'Issoire",
       "address": "63500 Issoire",
       "description": "Circuit d'Issoire en Auvergne, 3,2 km.",
-      "aliases": ["issoire", "circuit issoire"]
+      "aliases": [
+        "issoire",
+        "circuit issoire"
+      ],
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/issoire.jpg"
     },
     {
       "slug": "clastres",
@@ -216,7 +315,10 @@
       "full_name": "Circuit de Clastres",
       "address": "02440 Clastres",
       "description": "Circuit aérodrome dans l'Aisne, 3,04 km.",
-      "aliases": ["clastres", "circuit clastres"]
+      "aliases": [
+        "clastres",
+        "circuit clastres"
+      ]
     },
     {
       "slug": "nogaro",
@@ -228,7 +330,12 @@
       "full_name": "Circuit Paul Armagnac (Nogaro)",
       "address": "32110 Nogaro",
       "description": "Circuit Paul Armagnac dans le Gers, 3,64 km.",
-      "aliases": ["nogaro", "paul armagnac", "circuit nogaro"]
+      "aliases": [
+        "nogaro",
+        "paul armagnac",
+        "circuit nogaro"
+      ],
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/nogaro.png"
     },
     {
       "slug": "croix-en-ternois",
@@ -240,7 +347,12 @@
       "full_name": "Circuit de Croix-en-Ternois",
       "address": "62130 Croix-en-Ternois",
       "description": "Circuit court dans le Pas-de-Calais, 1,99 km, sinueux et technique.",
-      "aliases": ["croix en ternois", "croix-en-ternois", "croix"]
+      "aliases": [
+        "croix en ternois",
+        "croix-en-ternois",
+        "croix"
+      ],
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/croix-en-ternois.jpg"
     },
     {
       "slug": "folembray",
@@ -252,7 +364,11 @@
       "full_name": "Circuit de Folembray",
       "address": "02670 Folembray",
       "description": "Circuit de Folembray dans l'Aisne, 2,07 km.",
-      "aliases": ["folembray", "circuit folembray"]
+      "aliases": [
+        "folembray",
+        "circuit folembray"
+      ],
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/folembray.jpg"
     },
     {
       "slug": "anneau-du-rhin",
@@ -264,7 +380,14 @@
       "full_name": "Circuit de l'Anneau du Rhin",
       "address": "Rue Biltzheim, 68127 Biltzheim",
       "description": "Circuit alsacien de 3,7 km, dans la plaine du Rhin. Tracé technique apprécié pour les stages de pilotage.",
-      "aliases": ["anneau du rhin", "anneau-du-rhin", "anneaudurhin", "biltzheim", "rhin"]
+      "aliases": [
+        "anneau du rhin",
+        "anneau-du-rhin",
+        "anneaudurhin",
+        "biltzheim",
+        "rhin"
+      ],
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/anneau-du-rhin.jpg"
     },
     {
       "slug": "pau-arnos",
@@ -276,7 +399,14 @@
       "full_name": "Circuit de Pau-Arnos",
       "address": "64370 Arnos",
       "description": "Circuit béarnais de 2,7 km au pied des Pyrénées. Tracé sinueux typique des Pyrénées.",
-      "aliases": ["pau arnos", "pau-arnos", "pauarnos", "arnos", "pau"]
+      "aliases": [
+        "pau arnos",
+        "pau-arnos",
+        "pauarnos",
+        "arnos",
+        "pau"
+      ],
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/pau-arnos.jpg"
     },
     {
       "slug": "fontenay-le-comte",
@@ -288,7 +418,11 @@
       "full_name": "Circuit de Fontenay-le-Comte",
       "address": "85200 Fontenay-le-Comte",
       "description": "Petit circuit en Vendée, 1,24 km.",
-      "aliases": ["fontenay le comte", "fontenay-le-comte", "fontenay"]
+      "aliases": [
+        "fontenay le comte",
+        "fontenay-le-comte",
+        "fontenay"
+      ]
     },
     {
       "slug": "spa-francorchamps",
@@ -300,7 +434,13 @@
       "full_name": "Circuit de Spa-Francorchamps",
       "address": "Route du Circuit 55, 4970 Stavelot, Belgique",
       "description": "Circuit légendaire des Ardennes belges, 7,004 km. Eau Rouge, Raidillon, des classiques absolus.",
-      "aliases": ["spa", "spa francorchamps", "spa-francorchamps", "francorchamps"]
+      "aliases": [
+        "spa",
+        "spa francorchamps",
+        "spa-francorchamps",
+        "francorchamps"
+      ],
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/spa-francorchamps.jpg"
     },
     {
       "slug": "brno",
@@ -312,7 +452,12 @@
       "full_name": "Automotodrom Brno",
       "address": "Masarykův okruh, 641 00 Brno, République tchèque",
       "description": "Circuit de Masaryk à Brno, 5,403 km. Ancien GP MotoGP.",
-      "aliases": ["brno", "automotodrom brno", "masaryk"]
+      "aliases": [
+        "brno",
+        "automotodrom brno",
+        "masaryk"
+      ],
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/brno.png"
     },
     {
       "slug": "catalunya",
@@ -324,7 +469,14 @@
       "full_name": "Circuit de Catalunya",
       "address": "08160 Montmeló, Espagne",
       "description": "Circuit de Catalogne près de Barcelone, 4,657 km. GP Espagne MotoGP.",
-      "aliases": ["catalunya", "barcelone", "barcelona", "montmelo", "circuit de catalunya"]
+      "aliases": [
+        "catalunya",
+        "barcelone",
+        "barcelona",
+        "montmelo",
+        "circuit de catalunya"
+      ],
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/catalunya.jpg"
     },
     {
       "slug": "motorland-aragon",
@@ -336,7 +488,13 @@
       "full_name": "Motorland Aragón",
       "address": "Ctra. A-2404, km 1, 44600 Alcañiz, Espagne",
       "description": "Motorland Aragón à Alcañiz, 5,077 km. GP Aragón MotoGP.",
-      "aliases": ["motorland", "motorland aragon", "aragon", "alcaniz"]
+      "aliases": [
+        "motorland",
+        "motorland aragon",
+        "aragon",
+        "alcaniz"
+      ],
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/motorland-aragon.png"
     },
     {
       "slug": "alcarras",
@@ -348,7 +506,12 @@
       "full_name": "Circuit d'Alcarràs",
       "address": "25180 Alcarràs, Lleida, Espagne",
       "description": "Circuit espagnol près de Lérida, 4,1 km.",
-      "aliases": ["alcarras", "alcarràs", "circuit alcarras"]
+      "aliases": [
+        "alcarras",
+        "alcarràs",
+        "circuit alcarras"
+      ],
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/alcarras.jpg"
     },
     {
       "slug": "jerez",
@@ -360,7 +523,13 @@
       "full_name": "Circuito de Jerez — Ángel Nieto",
       "address": "11403 Jerez de la Frontera, Cádiz, Espagne",
       "description": "Circuit Ángel Nieto à Jerez, 4,423 km. GP Espagne MotoGP, ouverture de saison.",
-      "aliases": ["jerez", "jerez de la frontera", "circuito jerez", "angel nieto"]
+      "aliases": [
+        "jerez",
+        "jerez de la frontera",
+        "circuito jerez",
+        "angel nieto"
+      ],
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/jerez.jpg"
     },
     {
       "slug": "valencia",
@@ -372,7 +541,14 @@
       "full_name": "Circuit Ricardo Tormo (Valencia)",
       "address": "46380 Cheste, Espagne",
       "description": "Circuit Ricardo Tormo à Cheste, 4,005 km. GP de Valencia, finale MotoGP.",
-      "aliases": ["valencia", "valence", "cheste", "ricardo tormo", "circuit valencia"]
+      "aliases": [
+        "valencia",
+        "valence",
+        "cheste",
+        "ricardo tormo",
+        "circuit valencia"
+      ],
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/valencia.jpg"
     },
     {
       "slug": "mugello",
@@ -384,7 +560,11 @@
       "full_name": "Autodromo del Mugello",
       "address": "50038 Scarperia e San Piero FI, Italie",
       "description": "Mugello en Toscane, 5,245 km. GP d'Italie MotoGP.",
-      "aliases": ["mugello", "autodromo mugello"]
+      "aliases": [
+        "mugello",
+        "autodromo mugello"
+      ],
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/mugello.jpg"
     },
     {
       "slug": "misano",
@@ -396,7 +576,12 @@
       "full_name": "Misano World Circuit Marco Simoncelli",
       "address": "47843 Misano Adriatico RN, Italie",
       "description": "Circuit Marco Simoncelli à Misano, 4,226 km. GP de Saint-Marin et de la Riviera de Rimini.",
-      "aliases": ["misano", "marco simoncelli", "misano world circuit"]
+      "aliases": [
+        "misano",
+        "marco simoncelli",
+        "misano world circuit"
+      ],
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/misano.jpg"
     },
     {
       "slug": "cremona",
@@ -408,7 +593,11 @@
       "full_name": "Cremona Circuit",
       "address": "26040 San Martino del Lago CR, Italie",
       "description": "Cremona Circuit en Lombardie, 3,700 km.",
-      "aliases": ["cremona", "cremona circuit"]
+      "aliases": [
+        "cremona",
+        "cremona circuit"
+      ],
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/cremona.jpg"
     },
     {
       "slug": "portimao",
@@ -420,7 +609,13 @@
       "full_name": "Autódromo Internacional do Algarve",
       "address": "Sítio do Escampadinho - Mexilhoeira Grande, 8500-148 Portimão, Portugal",
       "description": "Autódromo de l'Algarve à Portimão, 4,692 km. Très technique avec gros dénivelé.",
-      "aliases": ["portimao", "portimão", "algarve", "autodromo algarve"]
+      "aliases": [
+        "portimao",
+        "portimão",
+        "algarve",
+        "autodromo algarve"
+      ],
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/portimao.jpg"
     }
   ]
 }
