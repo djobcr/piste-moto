@@ -138,9 +138,17 @@ def _item_to_event(item: dict, *, today: date, client: httpx.Client) -> Event | 
 def _fetch_groups(client: httpx.Client, event_id: str) -> list[Level]:
     """Récupère les groupes (niveaux) pour 1 event RideApp.
 
-    Endpoint : /api/v1/events/{event_id}/groups → liste de groupes triés par
-    `displayOrder`. Tolérant aux échecs (renvoie [] si KO) pour ne pas casser
-    le scraper entier sur une réponse 5xx isolée.
+    Endpoint : /api/v1/events/{event_id}/groups → liste de groupes.
+
+    Pour les events multi-jours / multi-formules (ex: Paul Ricard 2 jours en
+    "Pack" + "Journée 1" + "Journée 2"), l'API renvoie un groupe par jour ET
+    par formule, ce qui peut donner 8-12 groupes pour 4 niveaux. On agrège
+    par niveau canonique :
+      - `remaining` = max des `remainingSeats` (la meilleure dispo sur une
+        journée donnée pour ce niveau) — éviter la somme qui surcompterait
+        si Pack et Journée seule partagent les mêmes slots
+      - `max` = max des `maxCapacity` (capacité d'une journée)
+      - `displayOrder` = min, pour conserver l'ordre RideApp original
     """
     try:
         resp = client.get(f"{SHOP_BASE}/api/v1/events/{event_id}/groups")
@@ -152,20 +160,42 @@ def _fetch_groups(client: httpx.Client, event_id: str) -> list[Level]:
     if not isinstance(groups, list):
         return []
 
-    # Tri par displayOrder (1 = niveau le plus haut chez RideApp).
-    groups_sorted = sorted(groups, key=lambda g: g.get("displayOrder", 999))
-    levels: list[Level] = []
-    for g in groups_sorted:
+    # Agrégation par canonical (max sur remaining/max, min sur displayOrder)
+    aggregated: dict[str, dict] = {}
+    for g in groups:
         name = clean_text(g.get("name") or "")
         if not name:
             continue
-        levels.append(Level(
-            raw=name,
-            canonical=normalize_level(name),
-            remaining=g.get("remainingSeats") if isinstance(g.get("remainingSeats"), int) else None,
-            max=g.get("maxCapacity") if isinstance(g.get("maxCapacity"), int) else None,
-        ))
-    return levels
+        canon = normalize_level(name)
+        rem = g.get("remainingSeats") if isinstance(g.get("remainingSeats"), int) else None
+        mx = g.get("maxCapacity") if isinstance(g.get("maxCapacity"), int) else None
+        order = g.get("displayOrder") if isinstance(g.get("displayOrder"), int) else 999
+
+        if canon not in aggregated:
+            aggregated[canon] = {
+                "raw": name,
+                "canonical": canon,
+                "remaining": rem,
+                "max": mx,
+                "order": order,
+            }
+        else:
+            entry = aggregated[canon]
+            if rem is not None:
+                entry["remaining"] = max(entry["remaining"] or 0, rem)
+            if mx is not None:
+                entry["max"] = max(entry["max"] or 0, mx)
+            entry["order"] = min(entry["order"], order)
+
+    return [
+        Level(
+            raw=e["raw"],
+            canonical=e["canonical"],
+            remaining=e["remaining"],
+            max=e["max"],
+        )
+        for e in sorted(aggregated.values(), key=lambda e: e["order"])
+    ]
 
 
 def _parse_iso_date(value: str | None) -> date | None:
