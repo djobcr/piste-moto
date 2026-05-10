@@ -1,6 +1,45 @@
 {% extends "_base.html" %}
 
+{% set active_tab = "circuits" %}
+
 {% block title %}Piste Moto · {{ circuits | length }} circuits à venir{% endblock %}
+
+{% block extra_styles %}
+.filters-sticky {
+    position: sticky;
+    top: 49px;  /* hauteur du nav tabs */
+    z-index: 20;
+    background: hsl(var(--b1));
+    padding-top: 12px;
+    padding-bottom: 12px;
+    margin-bottom: 8px;
+}
+.filters-sticky.scrolled {
+    border-bottom: 1px solid hsl(var(--b3));
+    backdrop-filter: blur(8px);
+    background: hsl(var(--b1) / 0.92);
+}
+.results-count {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    opacity: 0.6;
+    font-weight: 600;
+}
+.results-count strong { color: hsl(var(--bc)); }
+.circuit-card-distance {
+    position: absolute;
+    bottom: 8px; right: 8px;
+    background: rgba(0,0,0,0.65);
+    color: white;
+    padding: 3px 8px;
+    border-radius: 999px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    backdrop-filter: blur(8px);
+    letter-spacing: 0.02em;
+}
+{% endblock %}
 
 {% block content %}
 
@@ -18,27 +57,46 @@
     </div>
 </header>
 
-<section class="container mx-auto max-w-6xl px-3 pt-4">
-    <input type="search" id="search" placeholder="Rechercher un circuit (nom, ville, pays…)"
-           class="input input-bordered w-full" autocomplete="off">
+<section class="filters-sticky" id="filters-sticky">
+    <div class="container mx-auto max-w-6xl px-3 flex flex-col gap-2">
+        <input type="search" id="search" placeholder="Rechercher un circuit (nom, ville, pays…)"
+               class="input input-bordered w-full" autocomplete="off">
 
-    <div class="flex flex-wrap gap-2 mt-3" id="country-chips">
-        <button class="chip-toggle btn btn-xs btn-outline active" data-country="ALL">Tous</button>
-        {% for country in countries %}
-            <button class="chip-toggle btn btn-xs btn-outline" data-country="{{ country.code }}">
-                {{ country.flag }} {{ country.code }} <span class="opacity-60">({{ country.count }})</span>
-            </button>
-        {% endfor %}
+        <div class="flex flex-wrap items-center gap-3">
+            <div class="form-control">
+                <select id="sort" class="select select-bordered select-sm" aria-label="Tri">
+                    <option value="distance">Proximité Alès</option>
+                    <option value="events">Nb sorties (↓)</option>
+                    <option value="name">Nom A → Z</option>
+                    <option value="country">Pays puis volume</option>
+                </select>
+            </div>
+            <div class="flex flex-wrap gap-2" id="country-chips">
+                <button class="chip-toggle btn btn-xs btn-outline active" data-country="ALL">Tous</button>
+                {% for country in countries %}
+                    <button class="chip-toggle btn btn-xs btn-outline" data-country="{{ country.code }}">
+                        {{ country.flag }} {{ country.code }} <span class="opacity-60">({{ country.count }})</span>
+                    </button>
+                {% endfor %}
+            </div>
+            <div class="ml-auto results-count">
+                <strong id="results-count">{{ circuits | length }}</strong> circuit<span id="results-s">s</span>
+            </div>
+        </div>
     </div>
 </section>
 
-<main class="container mx-auto max-w-6xl px-3 py-6">
+<main class="container mx-auto max-w-6xl px-3 py-4">
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3" id="circuits-grid">
         {% for c in circuits %}
         <a href="circuits/{{ c.slug }}/index.html"
            class="circuit-card"
            data-name="{{ c.search_blob }}"
            data-country="{{ c.country }}"
+           data-distance="{{ c.distance_km if c.distance_km is not none else 999999 }}"
+           data-events="{{ c.event_count }}"
+           data-name-sort="{{ c.name | lower }}"
+           data-country-sort="{{ c.country }}"
            style="--circuit-hue: {{ c.hue }}">
             <div class="circuit-card-image {% if not c.image_url %}no-image{% endif %}"
                  {% if c.image_url %}style="background-image: url('{{ c.image_url }}');"{% endif %}>
@@ -46,6 +104,11 @@
                     {{ c.event_count }} sortie{% if c.event_count > 1 %}s{% endif %}
                 </span>
                 <span class="circuit-card-fav" aria-hidden="true">♡</span>
+                {% if c.distance_km is not none and c.slug != 'ales' %}
+                <span class="circuit-card-distance">{{ c.distance_km }} km d'Alès</span>
+                {% elif c.slug == 'ales' %}
+                <span class="circuit-card-distance" style="background: hsl(var(--er));">📍 Ton circuit</span>
+                {% endif %}
             </div>
             {% if c.min_price_display %}
             <div class="circuit-card-price-band">
@@ -73,11 +136,22 @@
 <script>
 (function() {
     const search = document.getElementById('search');
+    const sortSelect = document.getElementById('sort');
     const grid = document.getElementById('circuits-grid');
     const empty = document.getElementById('empty-state');
     const countryChips = document.getElementById('country-chips');
+    const filtersSticky = document.getElementById('filters-sticky');
+    const resultsCount = document.getElementById('results-count');
+    const resultsS = document.getElementById('results-s');
     const cards = Array.from(grid.querySelectorAll('.circuit-card'));
     let activeCountry = 'ALL';
+
+    // Pays sort order : FR > BE > CH > ES > IT > PT > CZ > autres
+    const COUNTRY_ORDER = ['FR', 'BE', 'CH', 'ES', 'IT', 'PT', 'CZ'];
+    function countryRank(c) {
+        const i = COUNTRY_ORDER.indexOf(c);
+        return i === -1 ? 999 : i;
+    }
 
     function applyFilters() {
         const q = search.value.trim().toLowerCase();
@@ -92,8 +166,42 @@
             if (!hide) visible++;
         });
         empty.classList.toggle('hidden', visible > 0);
+        resultsCount.textContent = visible;
+        resultsS.textContent = visible > 1 ? 's' : '';
     }
+
+    function applySort() {
+        const mode = sortSelect.value;
+        let cmp;
+        switch (mode) {
+            case 'events':
+                cmp = (a, b) => parseInt(b.dataset.events, 10) - parseInt(a.dataset.events, 10)
+                            || a.dataset.nameSort.localeCompare(b.dataset.nameSort);
+                break;
+            case 'name':
+                cmp = (a, b) => a.dataset.nameSort.localeCompare(b.dataset.nameSort);
+                break;
+            case 'country':
+                cmp = (a, b) =>
+                    countryRank(a.dataset.countrySort) - countryRank(b.dataset.countrySort)
+                    || parseInt(b.dataset.events, 10) - parseInt(a.dataset.events, 10)
+                    || a.dataset.nameSort.localeCompare(b.dataset.nameSort);
+                break;
+            default:  // distance
+                cmp = (a, b) =>
+                    parseInt(a.dataset.distance, 10) - parseInt(b.dataset.distance, 10)
+                    || a.dataset.nameSort.localeCompare(b.dataset.nameSort);
+        }
+        cards.sort(cmp).forEach(c => grid.appendChild(c));
+    }
+
+    // Effet visuel "scrolled" quand on dépasse le hero
+    function onScroll() {
+        filtersSticky.classList.toggle('scrolled', window.scrollY > 100);
+    }
+
     search.addEventListener('input', applyFilters);
+    sortSelect.addEventListener('change', applySort);
     countryChips.addEventListener('click', e => {
         const chip = e.target.closest('.chip-toggle');
         if (!chip) return;
@@ -102,6 +210,10 @@
         activeCountry = chip.dataset.country;
         applyFilters();
     });
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    applySort();
+    applyFilters();
 })();
 </script>
 {% endblock %}

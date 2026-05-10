@@ -130,14 +130,18 @@ def render(db_path: Path = DB_PATH) -> dict:
         autoescape=select_autoescape(["html"]),
     )
 
+    # Référence pour le tri "Proximité" : Alès (le user y roule)
+    ref = circuits_by_slug.get("ales", {})
+    ref_lat = ref.get("lat", 44.1336)
+    ref_lon = ref.get("lon", 4.0617)
+
     # 5. Pour chaque circuit avec events, calcule les métadonnées agrégées
     circuit_summaries = []
     for slug, evs in events_by_slug.items():
         meta = circuits_by_slug.get(slug)
         if not meta:
-            continue  # circuit dans la DB mais pas dans circuits.json (devrait pas arriver)
+            continue
 
-        # Min price
         prices_eur = [r["price_cents"] for r in evs
                       if r["price_cents"] is not None and (r["currency"] or "EUR") == "EUR"]
         min_price_cents = min(prices_eur) if prices_eur else None
@@ -145,6 +149,11 @@ def render(db_path: Path = DB_PATH) -> dict:
 
         country = meta.get("country", "")
         flag = COUNTRY_FLAGS.get(country, "")
+
+        # Distance depuis Alès
+        distance_km: float | None = None
+        if meta.get("lat") is not None and meta.get("lon") is not None:
+            distance_km = round(_haversine_km(ref_lat, ref_lon, meta["lat"], meta["lon"]))
 
         circuit_summaries.append({
             **meta,
@@ -154,17 +163,17 @@ def render(db_path: Path = DB_PATH) -> dict:
             "image_url": images_by_slug.get(slug, ""),
             "flag": flag,
             "hue": _color_hue_for(slug),
+            "distance_km": distance_km,
+            "distance_label": f"{distance_km} km" if distance_km is not None else "",
             "search_blob": " ".join([
                 meta["name"], meta.get("city", ""), meta.get("region", ""),
                 country, slug,
-            ]).lower(),
+            ] + meta.get("aliases", [])).lower(),
         })
 
-    # Tri : par pays, puis par nb events desc, puis par nom
-    country_order = ["FR", "BE", "CH", "ES", "IT", "PT", "CZ"]
+    # Tri par défaut : proximité Alès (le user y roule)
     circuit_summaries.sort(key=lambda c: (
-        country_order.index(c["country"]) if c["country"] in country_order else 999,
-        -c["event_count"],
+        c["distance_km"] if c["distance_km"] is not None else 999_999,
         c["name"],
     ))
 
@@ -451,6 +460,17 @@ def _color_hue_for(name: str) -> str:
     for c in name:
         h = (h * 31 + ord(c)) % 360
     return f"{h}deg"
+
+
+def _haversine_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
+    """Distance en km entre 2 points GPS (formule de Haversine)."""
+    import math
+    R = 6371.0  # rayon de la Terre en km
+    p1, p2 = math.radians(lat1), math.radians(lat2)
+    dp = math.radians(lat2 - lat1)
+    dl = math.radians(lon2 - lon1)
+    a = math.sin(dp / 2) ** 2 + math.cos(p1) * math.cos(p2) * math.sin(dl / 2) ** 2
+    return 2 * R * math.asin(math.sqrt(a))
 
 
 def _slugify(name: str) -> str:

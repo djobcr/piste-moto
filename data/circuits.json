@@ -21,7 +21,9 @@
         "ales cevennes",
         "circuit d ales cevennes"
       ],
-      "image_url": "https://shop.rideapp.fr/data/public/circuits/ales.png"
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/ales.png",
+      "lat": 44.1336,
+      "lon": 4.0617
     },
     {
       "slug": "ledenon",
@@ -43,7 +45,9 @@
         "ledenonmardi",
         "ledenonvendredi"
       ],
-      "image_url": "https://shop.rideapp.fr/data/public/circuits/ledenon.jpg"
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/ledenon.jpg",
+      "lat": 43.9183,
+      "lon": 4.5039
     },
     {
       "slug": "le-luc",
@@ -62,7 +66,9 @@
         "circuit du var",
         "le luc en provence"
       ],
-      "image_url": "https://shop.rideapp.fr/data/public/circuits/luc.jpg"
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/luc.jpg",
+      "lat": 43.4089,
+      "lon": 6.3458
     },
     {
       "slug": "vaison-piste",
@@ -79,7 +85,9 @@
         "vaison-piste",
         "vaison"
       ],
-      "image_url": "https://shop.rideapp.fr/data/public/circuits/vaison-piste.jpg"
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/vaison-piste.jpg",
+      "lat": 44.24,
+      "lon": 5.075
     },
     {
       "slug": "mas-du-clos",
@@ -96,7 +104,9 @@
         "mas-du-clos",
         "le mas du clos"
       ],
-      "image_url": "https://shop.rideapp.fr/data/public/circuits/mas-du-clos.jpg"
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/mas-du-clos.jpg",
+      "lat": 45.675,
+      "lon": 2.3
     },
     {
       "slug": "paul-ricard",
@@ -114,7 +124,9 @@
         "castellet",
         "circuit paul ricard"
       ],
-      "image_url": "https://shop.rideapp.fr/data/public/circuits/paul-ricard.jpg"
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/paul-ricard.jpg",
+      "lat": 43.2517,
+      "lon": 5.7917
     },
     {
       "slug": "driving-center-paul-ricard",
@@ -131,7 +143,9 @@
         "driving center paul ricard",
         "driving"
       ],
-      "image_url": "https://shop.rideapp.fr/data/public/circuits/driving-center-paul-ricard.jpg"
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/driving-center-paul-ricard.jpg",
+      "lat": 43.253,
+      "lon": 5.79
     },
     {
       "slug": "dijon-prenois",
@@ -149,7 +163,9 @@
         "dijon prenois",
         "dijon-prenois"
       ],
-      "image_url": "https://shop.rideapp.fr/data/public/circuits/dijon-prenois.png"
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/dijon-prenois.png",
+      "lat": 47.3631,
+      "lon": 4.8997
     },
     {
       "slug": "vigeant",
@@ -166,7 +182,9 @@
         "le vigeant",
         "val de vienne"
       ],
-      "image_url": "https://shop.rideapp.fr/data/public/circuits/vigeant.png"
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/vigeant.png",
+      "lat": 46.1683,
+      "lon": 0.6839
     },
     {
       "slug": "mirecourt",
@@ -182,7 +200,9 @@
         "mirecourt",
         "circuit mirecourt"
       ],
-      "image_url": "https://shop.rideapp.fr/data/public/circuits/mirecourt.jpg"
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/mirecourt.jpg",
+      "lat": 48.305,
+      "lon": 6.1303
     },
     {
       "slug": "magny-cours-club",
@@ -198,7 +218,9 @@
         "magny cours club",
         "magny-cours club"
       ],
-      "image_url": "https://shop.rideapp.fr/data/public/circuits/magny-cours-club.jpg"
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/magny-cours-club.jpg",
+      "lat": 46.8636,
+      "lon": 3.1631
     },
     {
       "slug": "magny-cours-f1",
@@ -217,7 +239,9 @@
         "magny-cours f1",
         "nevers magny cours"
       ],
-      "image_url": "https://shop.rideapp.fr/data/public/circuits/magny-cours-f1.jpg"
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/magny-cours-f1.jpg",
+      "lat": 46.8636,
+      "lon": 3.1631
     },
     {
       "slug": "le-mans-bugatti",
@@ -236,7 +260,9 @@
         "le mans-bugatti",
         "circuit bugatti"
       ],
-      "image_url": "https://shop.rideapp.fr/data/public/circuits/le-mans.jpg"
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/le-mans.jpg",
+      "lat": 47.9558,
+      "lon": 0.2086
     },
     {
       "slug": "bresse",
@@ -253,7 +279,9 @@
         "circuit de bresse",
         "frontenaud"
       ],
-      "image_url": "https://shop.rideapp.fr/data/public/circuits/bresse.jpg"
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/bresse.jpg",
+      "lat": 46.5708,
+      "lon": 5.2917
     },
     {
       "slug": "carole",
@@ -270,7 +298,9 @@
         "circuit carole",
         "tremblay"
       ],
-      "image_url": "https://shop.rideapp.fr/data/public/circuits/carole.jpg"
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/carole.jpg",
+      "lat": 48.9692,
+      "lon": 2.53
     },
     {
       "slug": "chambley",
@@ -287,7 +317,9 @@
         "chambley-bussieres",
         "chambley bussieres"
       ],
-      "image_url": "https://shop.rideapp.fr/data/public/circuits/chambley.jpg"
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/chambley.jpg",
+      "lat": 49.0314,
+      "lon": 5.8881
     },
     {
       "slug": "issoire",
@@ -303,7 +335,9 @@
         "issoire",
         "circuit issoire"
       ],
-      "image_url": "https://shop.rideapp.fr/data/public/circuits/issoire.jpg"
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/issoire.jpg",
+      "lat": 45.55,
+      "lon": 3.25
     },
     {
       "slug": "clastres",
@@ -318,7 +352,9 @@
       "aliases": [
         "clastres",
         "circuit clastres"
-      ]
+      ],
+      "lat": 49.7536,
+      "lon": 3.2167
     },
     {
       "slug": "nogaro",
@@ -335,7 +371,9 @@
         "paul armagnac",
         "circuit nogaro"
       ],
-      "image_url": "https://shop.rideapp.fr/data/public/circuits/nogaro.png"
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/nogaro.png",
+      "lat": 43.7625,
+      "lon": -0.04
     },
     {
       "slug": "croix-en-ternois",
@@ -352,7 +390,9 @@
         "croix-en-ternois",
         "croix"
       ],
-      "image_url": "https://shop.rideapp.fr/data/public/circuits/croix-en-ternois.jpg"
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/croix-en-ternois.jpg",
+      "lat": 50.4133,
+      "lon": 2.3
     },
     {
       "slug": "folembray",
@@ -368,7 +408,9 @@
         "folembray",
         "circuit folembray"
       ],
-      "image_url": "https://shop.rideapp.fr/data/public/circuits/folembray.jpg"
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/folembray.jpg",
+      "lat": 49.5333,
+      "lon": 3.3
     },
     {
       "slug": "anneau-du-rhin",
@@ -387,7 +429,9 @@
         "biltzheim",
         "rhin"
       ],
-      "image_url": "https://shop.rideapp.fr/data/public/circuits/anneau-du-rhin.jpg"
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/anneau-du-rhin.jpg",
+      "lat": 48.0167,
+      "lon": 7.475
     },
     {
       "slug": "pau-arnos",
@@ -406,7 +450,9 @@
         "arnos",
         "pau"
       ],
-      "image_url": "https://shop.rideapp.fr/data/public/circuits/pau-arnos.jpg"
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/pau-arnos.jpg",
+      "lat": 43.4583,
+      "lon": -0.4583
     },
     {
       "slug": "fontenay-le-comte",
@@ -422,7 +468,9 @@
         "fontenay le comte",
         "fontenay-le-comte",
         "fontenay"
-      ]
+      ],
+      "lat": 46.4675,
+      "lon": -0.8042
     },
     {
       "slug": "spa-francorchamps",
@@ -440,7 +488,9 @@
         "spa-francorchamps",
         "francorchamps"
       ],
-      "image_url": "https://shop.rideapp.fr/data/public/circuits/spa-francorchamps.jpg"
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/spa-francorchamps.jpg",
+      "lat": 50.4372,
+      "lon": 5.9714
     },
     {
       "slug": "brno",
@@ -457,7 +507,9 @@
         "automotodrom brno",
         "masaryk"
       ],
-      "image_url": "https://shop.rideapp.fr/data/public/circuits/brno.png"
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/brno.png",
+      "lat": 49.2031,
+      "lon": 16.4458
     },
     {
       "slug": "catalunya",
@@ -476,7 +528,9 @@
         "montmelo",
         "circuit de catalunya"
       ],
-      "image_url": "https://shop.rideapp.fr/data/public/circuits/catalunya.jpg"
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/catalunya.jpg",
+      "lat": 41.57,
+      "lon": 2.2611
     },
     {
       "slug": "motorland-aragon",
@@ -494,7 +548,9 @@
         "aragon",
         "alcaniz"
       ],
-      "image_url": "https://shop.rideapp.fr/data/public/circuits/motorland-aragon.png"
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/motorland-aragon.png",
+      "lat": 41.0533,
+      "lon": -0.1597
     },
     {
       "slug": "alcarras",
@@ -511,7 +567,9 @@
         "alcarràs",
         "circuit alcarras"
       ],
-      "image_url": "https://shop.rideapp.fr/data/public/circuits/alcarras.jpg"
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/alcarras.jpg",
+      "lat": 41.5658,
+      "lon": 0.5103
     },
     {
       "slug": "jerez",
@@ -529,7 +587,9 @@
         "circuito jerez",
         "angel nieto"
       ],
-      "image_url": "https://shop.rideapp.fr/data/public/circuits/jerez.jpg"
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/jerez.jpg",
+      "lat": 36.7083,
+      "lon": -6.0322
     },
     {
       "slug": "valencia",
@@ -548,7 +608,9 @@
         "ricardo tormo",
         "circuit valencia"
       ],
-      "image_url": "https://shop.rideapp.fr/data/public/circuits/valencia.jpg"
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/valencia.jpg",
+      "lat": 39.4861,
+      "lon": -0.6228
     },
     {
       "slug": "mugello",
@@ -564,7 +626,9 @@
         "mugello",
         "autodromo mugello"
       ],
-      "image_url": "https://shop.rideapp.fr/data/public/circuits/mugello.jpg"
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/mugello.jpg",
+      "lat": 43.9975,
+      "lon": 11.3717
     },
     {
       "slug": "misano",
@@ -581,7 +645,9 @@
         "marco simoncelli",
         "misano world circuit"
       ],
-      "image_url": "https://shop.rideapp.fr/data/public/circuits/misano.jpg"
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/misano.jpg",
+      "lat": 43.9614,
+      "lon": 12.6831
     },
     {
       "slug": "cremona",
@@ -597,7 +663,9 @@
         "cremona",
         "cremona circuit"
       ],
-      "image_url": "https://shop.rideapp.fr/data/public/circuits/cremona.jpg"
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/cremona.jpg",
+      "lat": 45.1167,
+      "lon": 10.05
     },
     {
       "slug": "portimao",
@@ -615,7 +683,9 @@
         "algarve",
         "autodromo algarve"
       ],
-      "image_url": "https://shop.rideapp.fr/data/public/circuits/portimao.jpg"
+      "image_url": "https://shop.rideapp.fr/data/public/circuits/portimao.jpg",
+      "lat": 37.2294,
+      "lon": -8.6275
     }
   ]
 }
